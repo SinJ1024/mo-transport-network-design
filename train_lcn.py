@@ -22,11 +22,12 @@ def main(args):
             ignore_existing_lines=args.ignore_existing_lines
         )
         
-        env = mo_gym.make(args.gym_env, 
-                        city=city, 
+        env = mo_gym.make(args.gym_env,
+                        city=city,
                         constraints=MetroConstraints(city),
                         nr_stations=args.nr_stations,
-                        chained_reward=True,)
+                        chained_reward=True,
+                        include_demand_context=args.include_demand_context,)
 
         return env
 
@@ -62,6 +63,12 @@ def main(args):
             hidden_dim=args.hidden_dim,
             distance_ref=args.distance_ref,
             lcn_lambda=args.lcn_lambda,
+            lambda_schedule=args.lambda_schedule,
+            lambda_start=args.lambda_start,
+            lambda_end=args.lambda_end,
+            lambda_warmup_fraction=args.lambda_warmup_fraction,
+            lambda_freeze_fraction=args.lambda_freeze_fraction,
+            spatial_alpha=args.spatial_alpha,
             model_class=LCNTNDPModel
         )
         
@@ -114,6 +121,13 @@ if __name__ == "__main__":
     parser.add_argument('--cd_threshold', default=0.2, type=float, help='controls the threshold for crowdedness distance.')
     parser.add_argument('--distance_ref', default='nondominated', type=str, choices=['nondominated', 'optimal_max', 'nondominated_mean', 'interpolate', 'interpolate2', 'interpolate3'], help='controls the reference point for calculating the distance of every solution to the optimal point.')
     parser.add_argument('--lcn_lambda', default=None, type=float, help='value between 0 and 1. Controls the size of the front to explore. lambda -> 1: full pareto front. lambda -> 0 full lorenz front.')
+    parser.add_argument('--lambda_schedule', default='constant', type=str, choices=['constant', 'linear', 'cosine', 'step'], help='temporal schedule for lambda curriculum.')
+    parser.add_argument('--lambda_start', default=1.0, type=float, help='initial lambda value for curriculum.')
+    parser.add_argument('--lambda_end', default=None, type=float, help='target lambda value for curriculum (defaults to --lcn_lambda).')
+    parser.add_argument('--lambda_warmup_fraction', default=0.0, type=float, help='fraction of training to keep lambda at lambda_start.')
+    parser.add_argument('--lambda_freeze_fraction', default=0.1, type=float, help='fraction of training at end to keep lambda at lambda_end.')
+    parser.add_argument('--spatial_alpha', default=0.0, type=float, help='spatial scaling factor for per-episode effective lambda. 0 disables spatial component.')
+    parser.add_argument('--include_demand_context', action='store_true', default=False, help='augment observation with normalized OD demand context.')
 
     args = parser.parse_args()
     print(args)
