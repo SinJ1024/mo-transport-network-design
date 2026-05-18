@@ -1,6 +1,8 @@
 [submodule "envs/mo-tndp"]
 	path = envs/mo-tndp
-	url = https://github.com/sias-uva/mo-tndp.git
+	url = https://github.com/SinJ1024/mo-tndp.git
+	branch = spatiotemporal-lcn
 [submodule "morl-baselines"]
 	path = morl-baselines
-	url = https://github.com/dimichai/morl-baselines.git
+	url = https://github.com/SinJ1024/morl-baselines.git
+	branch = spatiotemporal-lcn

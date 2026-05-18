@@ -91,22 +91,25 @@ def load_agent_and_evaluate(args, model_path):
     agent.model = th.load(model_path, map_location=agent.device, weights_only=False)
     agent.model.eval()
 
+    # Set cd_threshold (normally set inside train(), needed for evaluate())
+    agent.cd_threshold = 0.2
+
     # Need to fill ER buffer minimally so evaluate() works
     agent.experience_replay = []
     starting_loc = (args.starting_loc_x, args.starting_loc_y) if args.starting_loc_x is not None else None
-    for _ in range(args.num_eval_policies + 5):
+    from morl_baselines.multi_policy.lcn.lcn import Transition
+    for ep_i in range(args.num_eval_policies + 5):
         transitions = []
         obs, info = env.reset(options={'loc': starting_loc})
         done = False
         while not done:
             action = env.action_space.sample(mask=info['action_mask'])
             n_obs, reward, terminated, truncated, info = env.step(action)
-            from morl_baselines.multi_policy.lcn.lcn import Transition
             transitions.append(Transition(obs, action, info['action_mask'],
                                           np.float32(reward).copy(), n_obs, terminated))
             done = terminated or truncated
             obs = n_obs
-        agent._add_episode(transitions, max_size=100, step=0)
+        agent._add_episode(transitions, max_size=100, step=ep_i)
 
     e_returns, _, _, e_states, e_cell_sat = agent.evaluate(
         env, cfg['max_return'], n=args.num_eval_policies, starting_loc=starting_loc)
