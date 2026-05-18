@@ -91,6 +91,9 @@ def load_agent_and_evaluate(args, model_path):
     agent.model = th.load(model_path, map_location=agent.device, weights_only=False)
     agent.model.eval()
 
+    # Set cd_threshold (normally set inside train(), needed for evaluate())
+    agent.cd_threshold = 0.2
+
     # Need to fill ER buffer minimally so evaluate() works
     agent.experience_replay = []
     starting_loc = (args.starting_loc_x, args.starting_loc_y) if args.starting_loc_x is not None else None
