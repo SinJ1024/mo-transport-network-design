@@ -368,7 +368,7 @@ python train_lcn.py --env xian --nr_groups 3 --nr_stations 20 \
 ```bash
 # 单个模型
 python visualize_results.py --env dilemma --nr_stations 9 \
-    --model_path results/lcn_dilemma_.../LCN_model_0.pt \
+    --model_path results/lcn_amsterdam_20260428_00_28_22.687141/LCN_model_0.pt \
     --lcn_lambda 0.5 --distance_ref interpolate2
 
 # 对比多个模型（例如消融实验）
