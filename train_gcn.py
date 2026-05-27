@@ -8,7 +8,7 @@ import numpy as np
 import torch
 import envs
 import argparse
-from morl_baselines.multi_policy.lcn.lcn import LCNTNDP, LCNTNDPModel
+from morl_baselines.multi_policy.gcn.gcn import GCN, GCNTNDPModel
 from morl_baselines.multi_policy.lcn.lcn_dst import LCNDST
 
 def main(args):
@@ -33,49 +33,26 @@ def main(args):
 
     env = make_env(args.gym_env)
  
-    if args.gym_env == 'deep-sea-treasure-concave-v0':
-        agent = LCNDST(
-            env,
-            scaling_factor=args.scaling_factor,
-            learning_rate=args.lr,
-            batch_size=args.batch_size,
-            project_name=args.project_name,
-            experiment_name=args.experiment_name,
-            log=not args.no_log,
-            seed=args.seed,
-            nr_layers=args.nr_layers,
-            hidden_dim=args.hidden_dim,
-            distance_ref=args.distance_ref,
-            lcn_lambda=args.lcn_lambda,
-            model_class=LCNTNDPModel
-        )
-    else:
-        agent = LCNTNDP(
-            env,
-            scaling_factor=args.scaling_factor,
-            learning_rate=args.lr,
-            batch_size=args.batch_size,
-            project_name=args.project_name,
-            experiment_name=args.experiment_name,
-            log=not args.no_log,
-            seed=args.seed,
-            nr_layers=args.nr_layers,
-            hidden_dim=args.hidden_dim,
-            distance_ref=args.distance_ref,
-            lcn_lambda=args.lcn_lambda,
-            lambda_schedule=args.lambda_schedule,
-            lambda_start=args.lambda_start,
-            lambda_end=args.lambda_end,
-            lambda_warmup_fraction=args.lambda_warmup_fraction,
-            lambda_freeze_fraction=args.lambda_freeze_fraction,
-            spatial_alpha=args.spatial_alpha,
-            model_class=LCNTNDPModel
-        )
-        
-        if args.starting_loc is None:
-            print('NOTE: Training is running with random starting locations.')
+    agent = LCN(
+        env,
+        scaling_factor=args.scaling_factor,
+        learning_rate=args.lr,
+        batch_size=args.batch_size,
+        project_name=args.project_name,
+        experiment_name=args.experiment_name,
+        log=not args.no_log,
+        seed=args.seed,
+        nr_layers=args.nr_layers,
+        hidden_dim=args.hidden_dim,
+        distance_ref=args.distance_ref,
+        lcn_lambda=args.lcn_lambda,
+        model_class=LCNTNDPModel
+    )
+ 
+    if args.starting_loc is None:
+        print('NOTE: Training is running with random starting locations.')
 
-    save_dir = Path(f"./results/lcn_{args.env}_{datetime.datetime.today().strftime('%Y%m%d_%H_%M_%S.%f')}")
+    save_dir = Path(f"./results/gcn_{args.env}_{datetime.datetime.today().strftime('%Y%m%d_%H_%M_%S.%f')}")
     agent.train(
         total_timesteps=args.timesteps,
         eval_env=make_env(args.gym_env),
@@ -182,14 +159,6 @@ if __name__ == "__main__":
         args.scaling_factor = np.array([100] * args.nr_groups + [0.01])
         args.ref_point = np.array([0] * args.nr_groups)
         args.max_return=np.array([1] * args.nr_groups)
-        args.pf_plot_limits = None
-    elif args.env == 'dst':
-        args.gym_env = 'deep-sea-treasure-concave-v0'
-        args.project_name = "DST"
-        args.experiment_name = "LCN-DST"
-        args.scaling_factor = np.array([0.1, 0.1, 0.01])
-        args.ref_point = np.array([0.0, -200.0])
-        args.max_return=np.array([124, -1])
         args.pf_plot_limits = None
 
     if args.starting_loc_x is not None and args.starting_loc_y is not None:
