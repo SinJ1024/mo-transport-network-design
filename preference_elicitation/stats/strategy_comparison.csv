@@ -1,0 +1,7 @@
+preference_model,strategy,mean_regret,top1_accuracy,mean_queries_to_threshold
+Bradley-Terry,random,0.216,0.0,16.8
+Bradley-Terry,uncertainty,0.273,0.0,92.8
+Feature BT,random,0.083,0.167,1.6
+Feature BT,uncertainty,0.011,0.583,2.7
+Logistic Regression,random,0.072,0.5,1.2
+Logistic Regression,uncertainty,0.022,0.833,2.6

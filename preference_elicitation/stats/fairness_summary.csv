@@ -1,0 +1,4 @@
+rl_model,mean_best_utility,std_best_utility,mean_regret_at_max,top1_accuracy,mean_kendall_tau,mean_queries,median_queries
+lambda_lcn,-0.0284,0.0481,0.082,0.375,0.683,21.4,2.0
+lcn,-0.0273,0.048,0.128,0.333,0.679,1.8,1.0
+pcn,-0.0412,0.06,0.129,0.333,0.686,8.6,1.0
