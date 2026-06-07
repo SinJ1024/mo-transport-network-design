@@ -1,23 +1,3 @@
-"""
-Three report-quality figures, one per research question.
-
-  Fig 1 (fig1_learning_curves.png) — Does preference elicitation work?
-         Normalised regret vs query budget, averaged over users & fairness
-         definitions.  Shaded band = ±1 std across fairness definitions.
-
-  Fig 2 (fig2_efficiency.png)      — How query-efficient is it?
-         Mean queries to reach the regret threshold, per model × strategy.
-
-  Fig 3 (fig3_fairness.png)        — Which fairness definition is best?
-         Left:  elicitability (regret at max budget, per model × definition).
-         Right: true policy quality (mean best-utility per definition).
-
-Usage:
-    python report_figures.py \\
-        --results results/lambda_lcn.json results/pcn.json results/lcn/lcn.json \\
-        --output  figures/report/
-"""
-
 import argparse
 import json
 import os

@@ -1,18 +1,3 @@
-"""
-Generate summary statistics for the preference elicitation report.
-
-Research questions answered:
-  Q1. Does preference elicitation work? (top-1 accuracy, regret at max budget)
-  Q2. How query-efficient can it be? (min queries to threshold)
-  Q3. Which fairness definition supports best elicitation? (per-fairness metrics)
-  Q4. Which fairness definition has the best true policy utility? (best_utility)
-
-Usage:
-    python summarize_results.py \\
-        --results results/lambda_lcn.json results/pcn.json results/lcn/lcn.json \\
-        --output stats/
-"""
-
 import argparse
 import json
 import os
@@ -29,7 +14,19 @@ MODEL_LABELS = {
 }
 
 
-# ── Data loading ───────────────────────────────────────────────────────────────
+
+def _rl_model_from_policy_set(policy_set: str) -> str:
+    """Return the model label from a policy_set path.
+
+    For aggregate files (e.g. 'gcn.json') returns the stem ('gcn').
+    For per-seed files (e.g. 'gcn/front_table_11.json') returns the parent
+    directory name ('gcn') so all seeds are grouped under the same label.
+    """
+    dirname = os.path.dirname(policy_set)
+    if dirname:
+        return os.path.basename(dirname)
+    return os.path.splitext(os.path.basename(policy_set))[0]
+
 
 def load_results(paths: list[str]) -> pd.DataFrame:
     rows = []
@@ -38,7 +35,7 @@ def load_results(paths: list[str]) -> pd.DataFrame:
             data = json.load(f)
         for row in data:
             if "rl_model" not in row and "policy_set" in row:
-                row["rl_model"] = os.path.splitext(os.path.basename(row["policy_set"]))[0]
+                row["rl_model"] = _rl_model_from_policy_set(row["policy_set"])
             row["top1_hit"] = int(row["selected_policy_id"] == row["true_best_policy_id"])
         rows.extend(data)
     return pd.DataFrame(rows)
@@ -67,7 +64,6 @@ def compute_min_queries(df: pd.DataFrame, threshold: float) -> pd.DataFrame:
     return pd.DataFrame(records)
 
 
-# ── Printing ───────────────────────────────────────────────────────────────────
 
 def print_table(title: str, df: pd.DataFrame):
     print(f"\n{'=' * 70}")
@@ -77,7 +73,6 @@ def print_table(title: str, df: pd.DataFrame):
     print()
 
 
-# ── Main ───────────────────────────────────────────────────────────────────────
 
 def main():
     parser = argparse.ArgumentParser(
@@ -110,8 +105,6 @@ def main():
     max_df = at_max_budget(df)
     eff_df  = compute_min_queries(df, threshold)
 
-    # ── Table 1: Q1 + Q2 — Model performance summary ──────────────────────────
-    #   Averaged over all users, fairness definitions and strategies.
     t1 = (
         max_df
         .groupby("preference_model")
@@ -121,6 +114,8 @@ def main():
             mean_kendall_tau     =("kendall_tau",             "mean"),
             mean_rank_bias       =("mean_rank_displacement",  "mean"),
             mean_top5_mismatch   =("top5_ranking_mismatch",   "mean"),
+            mean_policy_distance =("policy_distance",         "mean"),
+            mean_selected_rank   =("selected_rank",           "mean"),
         )
         .round(3)
     )
@@ -138,9 +133,6 @@ def main():
     )
     t1.to_csv(os.path.join(args.output, "model_summary.csv"))
 
-    # ── Table 2: Q3 + Q4 — Fairness definition comparison ────────────────────
-    #   best_utility is constant for a given (policy_set, user); average here
-    #   represents the inherent quality ceiling of each training approach.
     best_util = (
         max_df.groupby(["rl_model", "user_name"])["best_utility"]
         .mean()
@@ -152,9 +144,12 @@ def main():
     elicit = (
         max_df.groupby("rl_model")
         .agg(
-            mean_regret_at_max=("normalized_regret", "mean"),
-            top1_accuracy     =("top1_hit",          "mean"),
-            mean_kendall_tau  =("kendall_tau",        "mean"),
+            mean_regret_at_max   =("normalized_regret",      "mean"),
+            top1_accuracy        =("top1_hit",               "mean"),
+            mean_kendall_tau     =("kendall_tau",             "mean"),
+            mean_top5_mismatch   =("top5_ranking_mismatch",   "mean"),
+            mean_policy_distance =("policy_distance",         "mean"),
+            mean_selected_rank   =("selected_rank",           "mean"),
         )
         .round(3)
     )
@@ -167,12 +162,14 @@ def main():
     print_table("Q3+Q4 | Fairness definition comparison", t2)
     t2.to_csv(os.path.join(args.output, "fairness_summary.csv"))
 
-    # ── Table 3: Model × Fairness cross-tables ────────────────────────────────
     for metric, label, q in [
-        ("normalized_regret",      "Regret at max budget (↓ better)",       "Q1"),
-        ("top1_hit",               "Top-1 accuracy (↑ better)",             "Q1"),
-        ("kendall_tau",            "Kendall-τ at max budget (↑ better)",    "Q3"),
-        ("mean_rank_displacement", "Mean rank bias at max budget (→0)",     "Q3"),
+        ("normalized_regret",      "Regret at max budget (↓ better)",        "Q1"),
+        ("top1_hit",               "Top-1 accuracy (↑ better)",              "Q1"),
+        ("kendall_tau",            "Kendall-τ at max budget (↑ better)",     "Q3"),
+        ("mean_rank_displacement", "Mean rank bias at max budget (→0)",      "Q3"),
+        ("top5_ranking_mismatch",  "Top-5 mismatch at max budget (↓ better)","Q3"),
+        ("policy_distance",        "Avg policy distance at max budget",      "Q4"),
+        ("selected_rank",          "Avg selected rank at max budget (↓ better)", "Q4"),
     ]:
         t = (
             max_df
@@ -188,12 +185,14 @@ def main():
         print_table(f"{q} | {label}  [model × fairness definition]", t)
         t.to_csv(os.path.join(args.output, f"cross_{metric}.csv"))
 
-    # ── Table 4: Q2 — Strategy comparison ────────────────────────────────────
     t4 = (
         max_df.groupby(["preference_model", "strategy"])
         .agg(
-            mean_regret  =("normalized_regret", "mean"),
-            top1_accuracy=("top1_hit",          "mean"),
+            mean_regret          =("normalized_regret",    "mean"),
+            top1_accuracy        =("top1_hit",             "mean"),
+            mean_top5_mismatch   =("top5_ranking_mismatch", "mean"),
+            mean_policy_distance =("policy_distance",       "mean"),
+            mean_selected_rank   =("selected_rank",         "mean"),
         )
         .round(3)
     )
@@ -210,14 +209,16 @@ def main():
     print_table("Q2 | Uncertainty vs Random query strategy", t4)
     t4.to_csv(os.path.join(args.output, "strategy_comparison.csv"))
 
-    # ── Table 5: User type analysis ───────────────────────────────────────────
     t5 = (
         max_df.groupby("user_name")
         .agg(
-            mean_regret      =("normalized_regret", "mean"),
-            top1_accuracy    =("top1_hit",          "mean"),
-            mean_best_utility=("best_utility",       "mean"),
-            mean_selected_utility=("selected_utility", "mean"),
+            mean_regret          =("normalized_regret",    "mean"),
+            top1_accuracy        =("top1_hit",             "mean"),
+            mean_best_utility    =("best_utility",          "mean"),
+            mean_selected_utility=("selected_utility",      "mean"),
+            mean_top5_mismatch   =("top5_ranking_mismatch", "mean"),
+            mean_policy_distance =("policy_distance",       "mean"),
+            mean_selected_rank   =("selected_rank",         "mean"),
         )
         .round(3)
     )

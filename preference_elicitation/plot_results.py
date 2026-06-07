@@ -1,24 +1,3 @@
-"""
-Analysis and plotting for preference elicitation evaluation.
-
-Answers: "How efficiently and effectively does preference elicitation
-facilitate decision support under different fairness definitions?"
-
-Usage
------
-    python plot_results.py --results results/wandb_evaluation_lambda_lcn.json
-                                     results/wandb_evaluation_pcn.json
-                           --output  figures/
-
-Figures produced
-----------------
-1. learning_curves.png   — Normalised regret vs query budget per (user, model, strategy)
-2. efficiency.png        — Min queries to reach regret ≤ threshold (bar chart)
-3. ranking_quality.png   — Kendall-τ and systematic bias per (user, model)
-4. heatmap.png           — Metric heatmap: preference model × fairness definition
-5. top5_mismatch.png     — Top-5 mismatch evolution per (user, model)
-"""
-
 import argparse
 import json
 import os
@@ -31,7 +10,6 @@ import matplotlib.pyplot as plt
 import matplotlib.ticker as mticker
 import numpy as np
 
-# ── Aesthetics ─────────────────────────────────────────────────────────────────
 MODEL_COLORS = {
     "logistic_regression": "#2196F3",
     "bradley_terry":       "#FF9800",
@@ -49,7 +27,14 @@ STRATEGY_STYLES = {
 REGRET_THRESHOLD = 0.05
 
 
-# ── Data loading ───────────────────────────────────────────────────────────────
+
+def _rl_model_from_policy_set(policy_set: str) -> str:
+    """Return parent directory name for per-seed paths, stem for top-level files."""
+    dirname = os.path.dirname(policy_set)
+    if dirname:
+        return os.path.basename(dirname)
+    return os.path.splitext(os.path.basename(policy_set))[0]
+
 
 def load_results(paths: list[str]) -> list[dict]:
     rows = []
@@ -58,8 +43,7 @@ def load_results(paths: list[str]) -> list[dict]:
             data = json.load(f)
         for row in data:
             if "rl_model" not in row and "policy_set" in row:
-                # Derive a display name from the policy_set path, e.g. "lambda_lcn.json" → "lambda_lcn"
-                row["rl_model"] = os.path.splitext(os.path.basename(row["policy_set"]))[0]
+                row["rl_model"] = _rl_model_from_policy_set(row["policy_set"])
         rows.extend(data)
     return rows
 
@@ -94,7 +78,6 @@ def min_queries_at_threshold(rows, threshold=REGRET_THRESHOLD):
     return None
 
 
-# ── Figure 1: Learning curves ─────────────────────────────────────────────────
 
 def plot_learning_curves(rows, out_dir):
     user_names = sorted({r["user_name"] for r in rows})
@@ -148,7 +131,6 @@ def plot_learning_curves(rows, out_dir):
     print(f"  Saved {path}")
 
 
-# ── Figure 2: Efficiency (min queries) ────────────────────────────────────────
 
 def plot_efficiency(rows, out_dir):
     user_names  = sorted({r["user_name"]         for r in rows})
@@ -206,8 +188,6 @@ def plot_efficiency(rows, out_dir):
     plt.close(fig)
     print(f"  Saved {path}")
 
-
-# ── Figure 3: Ranking quality (Kendall-τ and bias) ────────────────────────────
 
 def plot_ranking_quality(rows, out_dir):
     """
@@ -276,8 +256,6 @@ def plot_ranking_quality(rows, out_dir):
     print(f"  Saved {path}")
 
 
-# ── Figure 4: Summary heatmap ─────────────────────────────────────────────────
-
 def plot_heatmap(rows, out_dir):
     """
     Heatmap: rows = preference models, columns = users (fairness definitions).
@@ -317,7 +295,6 @@ def plot_heatmap(rows, out_dir):
                     at_max = [r for r in seg if r["query_budget"] == max_q]
                     matrix[pi, ui] = np.nanmean([r[metric_key] for r in at_max])
 
-            # Invert colormap so "better" is always darker green
             invert = metric_key in ("normalized_regret", "top5_ranking_mismatch")
             cmap = "RdYlGn" if not invert else "RdYlGn_r"
             vmin, vmax = np.nanmin(matrix), np.nanmax(matrix)
@@ -332,7 +309,6 @@ def plot_heatmap(rows, out_dir):
             ax.set_title(f"{metric_label}  [{rl}]", fontsize=9)
             plt.colorbar(im, ax=ax, fraction=0.02, pad=0.02)
 
-            # Annotate cells
             for pi in range(len(pref_models)):
                 for ui in range(len(user_names)):
                     val = matrix[pi, ui]
@@ -348,8 +324,6 @@ def plot_heatmap(rows, out_dir):
     plt.close(fig)
     print(f"  Saved {path}")
 
-
-# ── Figure 5: Top-5 mismatch evolution ────────────────────────────────────────
 
 def plot_top5_mismatch(rows, out_dir):
     user_names  = sorted({r["user_name"]        for r in rows})
@@ -396,7 +370,6 @@ def plot_top5_mismatch(rows, out_dir):
     print(f"  Saved {path}")
 
 
-# ── Main ───────────────────────────────────────────────────────────────────────
 
 def main():
     global REGRET_THRESHOLD
@@ -413,12 +386,18 @@ def main():
         "--regret-threshold", type=float, default=REGRET_THRESHOLD,
         help="Regret threshold for efficiency metric.",
     )
+    parser.add_argument(
+        "--users", nargs="+", default=None,
+        help="Only plot these user types (e.g. --users efficiency_focused fairness_focused).",
+    )
     args = parser.parse_args()
 
     REGRET_THRESHOLD = args.regret_threshold
 
     os.makedirs(args.output, exist_ok=True)
     rows = load_results(args.results)
+    if args.users:
+        rows = [r for r in rows if r.get("user_name") in args.users]
     print(f"Loaded {len(rows)} result rows from {len(args.results)} file(s).")
 
     print("Plotting learning curves ...")

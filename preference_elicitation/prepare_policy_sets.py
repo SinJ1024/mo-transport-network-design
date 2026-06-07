@@ -22,19 +22,20 @@ import json
 import os
 import re
 
-# ── Configuration ──────────────────────────────────────────────────────────────
-# Each entry: (source_folder, lcn_lambda_value)
+
 FOLDER_CONFIG = [
-    ("lambda_lcn", 0.5),
-    ("pcn",        None),
-    ("lcn",        None),
+    ("lambda_lcn",           0.5),
+    ("pcn",                  None),
+    ("lcn",                  None),
+    ("gcn",                  None),
+    ("lambda scheduler lcn", None),
 ]
 
 
 def _sanitize(filename: str) -> str:
     """Turn a raw filename into a safe slug, e.g. 'front.table (1).json' → 'front_table_1'."""
-    name = os.path.splitext(filename)[0]          # strip .json
-    name = re.sub(r"[^\w]+", "_", name)           # replace non-word chars with _
+    name = os.path.splitext(filename)[0]         
+    name = re.sub(r"[^\w]+", "_", name)           
     name = name.strip("_")
     return name
 
@@ -93,7 +94,6 @@ def main():
             slug = _sanitize(os.path.basename(filepath))
             policies = _parse_table(filepath, lcn_lambda, id_offset=global_id)
 
-            # ── Per-seed file (local policy_ids start at 0) ────────────────
             per_seed_policies = [
                 {**p, "policy_id": i} for i, p in enumerate(policies)
             ]
@@ -102,7 +102,6 @@ def main():
             all_policies.extend(policies)
             global_id += len(policies)
 
-        # ── Aggregate file ─────────────────────────────────────────────────
         _save(all_policies, aggregate_path)
 
 

@@ -44,9 +44,6 @@ class FeatureBTModel:
         appeared in at least one comparison.  The learned weight vector w then
         lets us score *any* policy (including never-compared ones) via
             score(p) = w · φ(p)
-
-    This combines choix's principled BT optimisation with the parameter
-    efficiency of a feature-based model.
     """
 
     def __init__(

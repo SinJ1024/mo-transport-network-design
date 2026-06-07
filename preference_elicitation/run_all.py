@@ -1,13 +1,3 @@
-"""
-End-to-end pipeline: prepare policy sets → run all preference models → plot.
-
-Usage
------
-    python run_all.py
-    python run_all.py --skip-prepare   # if policy_sets/ already exists
-    python run_all.py --skip-eval      # only re-plot existing results
-"""
-
 import argparse
 import glob
 import subprocess
@@ -48,13 +38,11 @@ def main():
     os.makedirs(args.output_dir, exist_ok=True)
     os.makedirs(args.figures_dir, exist_ok=True)
 
-    # ── Step 1: Prepare policy sets ───────────────────────────────────────────
     if not args.skip_prepare:
         run([py, "prepare_policy_sets.py"], "Prepare policy sets from local folders")
     else:
         print("\n[Step 1] Skipping policy-set preparation.")
 
-    # ── Step 2: Run preference elicitation for each model set ─────────────────
     combined_output = os.path.join(args.output_dir, "all_results.json")
 
     if not args.skip_eval:
@@ -70,8 +58,7 @@ def main():
     else:
         print("\n[Step 2] Skipping preference elicitation evaluation.")
 
-    # ── Step 3: Plot ──────────────────────────────────────────────────────────
-    # Collect whichever per-model result files exist
+
     per_model_files = sorted(glob.glob(os.path.join(args.output_dir, "*.json")))
     per_model_files = [f for f in per_model_files if os.path.basename(f) != "all_results.json"]
     if not per_model_files:

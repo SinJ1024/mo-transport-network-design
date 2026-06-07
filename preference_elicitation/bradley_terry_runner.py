@@ -39,7 +39,7 @@ class BradleyTerryModel:
     choix expects pairwise data as:
         (winner, loser)
 
-    Your runner stores comparisons as:
+    Stores comparisons as:
         (i, j, pref)
 
     where pref = 1 means i preferred over j,
@@ -98,8 +98,7 @@ class BradleyTerryModel:
             tol=self.tol,
         )
 
-        # Bradley-Terry scores are shift-invariant for prediction.
-        # This keeps the scores interpretable and comparable to your old implementation.
+
         self.scores = self.scores - np.mean(self.scores)
 
         self.is_fitted = True

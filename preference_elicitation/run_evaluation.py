@@ -31,7 +31,6 @@ from bradley_terry_runner import run_budget_search as _run_bt
 from feature_bt_runner import run_budget_search as _run_fbt
 
 
-# ── Helpers ────────────────────────────────────────────────────────────────────
 
 def _to_dicts(results, preference_model: str, policy_set_path: str) -> list:
     rows = []
@@ -48,8 +47,6 @@ def _find_policy_sets(root: str) -> list[str]:
     top   = sorted(glob.glob(os.path.join(root, "*.json")))
     return seeds + top
 
-
-# ── Main ───────────────────────────────────────────────────────────────────────
 
 def main():
     parser = argparse.ArgumentParser(
@@ -151,7 +148,6 @@ def main():
                 row["policy_set"] = rel
                 set_rows.append(row)
 
-        # Save per-policy-set results
         out_path = os.path.join(args.output_dir, rel.replace(os.sep, "_"))
         with open(out_path, "w") as f:
             json.dump(set_rows, f, indent=2)
@@ -159,7 +155,6 @@ def main():
 
         all_rows.extend(set_rows)
 
-    # Save combined results
     combined_path = os.path.join(args.output_dir, "all_results.json")
     with open(combined_path, "w") as f:
         json.dump(all_rows, f, indent=2)
