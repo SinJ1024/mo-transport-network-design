@@ -1,0 +1,4 @@
+preference_model,lambda_lcn,lcn,pcn
+Bradley-Terry,0.0,0.0,0.0
+Feature BT,0.375,0.5,0.25
+Logistic Regression,0.75,0.5,0.75

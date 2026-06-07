@@ -1,0 +1,5 @@
+user_name,mean_regret,top1_accuracy,mean_best_utility,mean_selected_utility
+efficiency_focused,0.107,0.222,0.01,0.01
+fairness_focused,0.12,0.389,-0.108,-0.123
+group_3_priority,0.116,0.389,-0.016,-0.018
+group_9_priority,0.109,0.389,-0.016,-0.018

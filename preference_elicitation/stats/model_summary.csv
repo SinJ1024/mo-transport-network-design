@@ -1,0 +1,4 @@
+preference_model,top1_accuracy,mean_regret,mean_kendall_tau,mean_rank_bias,mean_top5_mismatch,mean_queries,median_queries
+Bradley-Terry,0.0,0.244,0.384,0.0,4.25,54.8,45.5
+Feature BT,0.375,0.047,0.815,0.0,1.958,2.2,1.0
+Logistic Regression,0.667,0.047,0.849,0.0,1.125,2.0,1.0
