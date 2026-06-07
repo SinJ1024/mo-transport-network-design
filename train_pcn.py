@@ -52,7 +52,7 @@ def main(args):
             scaling_factor=args.scaling_factor,
             learning_rate=args.lr,
             batch_size=args.batch_size,
-            project_name="MORL-TNDP",
+            project_name=(args.project_name or "MORL-TNDP"),
             experiment_name=args.experiment_name,
             log=not args.no_log,
             seed=args.seed,
@@ -120,6 +120,7 @@ if __name__ == "__main__":
     parser.add_argument('--no_log', action='store_true', default=False)
     parser.add_argument('--seed', default=42, type=int)
     parser.add_argument('--cd_threshold', default=0.2, type=float, help='controls the threshold for crowdedness distance.')
+    parser.add_argument('--project_name', default=None, type=str, help='wandb project name (overrides env default).')
 
     args = parser.parse_args()
     print(args)
