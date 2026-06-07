@@ -45,6 +45,7 @@ def main(args):
         batch_size=args.batch_size,
         project_name=args.project_name,
         experiment_name=args.experiment_name,
+        wandb_entity=args.wandb_entity,
         log=not args.no_log,
         seed=args.seed,
         nr_layers=args.nr_layers,
@@ -102,6 +103,9 @@ if __name__ == "__main__":
     parser.add_argument('--hidden_dim', default=64, type=int)
     parser.add_argument('--timesteps', default=2000, type=int)
     parser.add_argument('--no_log', action='store_true', default=False)
+    parser.add_argument('--project_name', default=None, type=str, help='wandb project name (overrides env default).')
+    parser.add_argument('--experiment_name', default=None, type=str, help='wandb run/experiment name (overrides env default).')
+    parser.add_argument('--wandb_entity', default=None, type=str, help='wandb entity/team for logging.')
     parser.add_argument('--seed', default=42, type=int)
     parser.add_argument('--cd_threshold', default=0.2, type=float, help='controls the threshold for crowdedness distance.')
     parser.add_argument('--distance_ref', default='nondominated', type=str, choices=['nondominated', 'optimal_max', 'nondominated_mean', 'interpolate', 'interpolate2', 'interpolate3'], help='controls the reference point for calculating the distance of every solution to the optimal point.')
@@ -161,10 +165,10 @@ if __name__ == "__main__":
     if args.env == 'amsterdam':
         args.city_path = Path(f"./envs/mo-tndp/cities/amsterdam")
         args.gym_env = 'motndp_amsterdam-v0'
-        args.project_name = "MORL-TNDP"
+        args.project_name = args.project_name or "MORL-TNDP"
         args.groups_file = f"price_groups_{args.nr_groups}.txt"
         args.ignore_existing_lines = True
-        args.experiment_name = "GCN-Amsterdam"
+        args.experiment_name = args.experiment_name or "GCN-Amsterdam"
         args.scaling_factor = np.array([100] * args.nr_groups + [0.01])
         args.ref_point = np.array([0] * args.nr_groups)
         args.max_return=np.array([1] * args.nr_groups)
@@ -172,10 +176,10 @@ if __name__ == "__main__":
     elif args.env == 'xian':
         args.city_path = Path(f"./envs/mo-tndp/cities/xian")
         args.gym_env = 'motndp_xian-v0'
-        args.project_name = "MORL-TNDP"
+        args.project_name = args.project_name or "MORL-TNDP"
         args.groups_file = f"price_groups_{args.nr_groups}.txt"
         args.ignore_existing_lines = True
-        args.experiment_name = "GCN-Xian"
+        args.experiment_name = args.experiment_name or "GCN-Xian"
         args.scaling_factor = np.array([100] * args.nr_groups + [0.01])
         args.ref_point = np.array([0] * args.nr_groups)
         args.max_return=np.array([1] * args.nr_groups)
