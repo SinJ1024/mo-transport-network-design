@@ -149,3 +149,32 @@ bash jobs/ablation_xian.sh 42 temporal
 | Max-Min Floor | `eval/maxmin_floor_max` | Worst-case cell satisfaction |
 | Spatial SW Ratio | `eval/spatial_sw_ratio` | High/low demand region balance |
 | Lambda Curve | `train/lcn_lambda` | Lambda schedule progression |
+
+---
+
+## Theoretical Optimal Bounds (ILP)
+
+`bound.py` computes ILP optimal bounds to calibrate how close the RL policies get
+to the optimum. Bounded metrics: group-level **efficiency, max-min, Gini, Sen,
+Nash (+ geometric-mean Nash)** and cell-level **demand_coverage**. The
+ratio/floor metrics (served_floor, price_equity, spatial_sw ratio) are *not*
+bounded — their unconstrained optimum is degenerate (e.g. serve a single cell, or
+only one region).
+
+**Relaxed bounds** (free, PuLP/CBC, fast; valid upper bounds, no path connectivity):
+```bash
+python bound.py --env xian --groups_file price_groups_10.txt \
+  --nr_stations 20 --starting_loc_x 9 --starting_loc_y 19 \
+  --solver pulp \
+  --metrics efficiency maxmin gini sen nash demand_coverage
+```
+
+**Exact-path bounds** (tighter, true connected line; needs a Gurobi license, slower):
+```bash
+python bound.py --env xian --groups_file price_groups_10.txt \
+  --nr_stations 20 --starting_loc_x 9 --starting_loc_y 19 \
+  --solver gurobi --exact_path --time_limit 1200 \
+  --metrics efficiency maxmin demand_coverage nash
+```
+> Exact-path adds ~16.8k binary sequence variables on Xi'an; even Gurobi may hit
+> the time limit, in which case the printed value is the best bound found so far.

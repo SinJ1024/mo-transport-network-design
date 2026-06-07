@@ -190,6 +190,15 @@ class PuLPSolver:
         prob += pulp.lpSum(self._group_return(z, g) for g in range(self.n_groups))
         return self._run(prob, x, z, "Efficiency", maximize)
 
+    def solve_demand_coverage(self):
+        """Max demand-weighted spatial reach (cell-level). Upper bound uses
+        served_i = x_i, tight for a connected line."""
+        prob, x, z = self._build_base("DemandCoverage", pulp.LpMaximize)
+        D = self.city.od_mx.sum(axis=0) + self.city.od_mx.sum(axis=1)
+        total = float(D.sum())
+        prob += pulp.lpSum(float(D[i]) * x[i] for i in range(self.G)) / total
+        return self._run(prob, x, z, "Demand Coverage", True)
+
     def solve_maxmin(self):
         """Max-Min Fairness: max min_g R_g"""
         prob, x, z = self._build_base("MaxMin", pulp.LpMaximize)
@@ -467,6 +476,17 @@ class GurobiSolver:
         m.setObjective(obj, GRB.MAXIMIZE if maximize else GRB.MINIMIZE)
         return self._run(m, x, z, "Efficiency", maximize)
 
+    def solve_demand_coverage(self):
+        """Max demand-weighted spatial reach: fraction of total cell demand located
+        in served cells. Upper bound uses served_i = x_i (every selected demand cell
+        counts as served), which is tight for a connected line."""
+        m, x, z = self._build_base("DemandCoverage")
+        D = self.city.od_mx.sum(axis=0) + self.city.od_mx.sum(axis=1)
+        total = float(D.sum())
+        m.setObjective(gp.quicksum(float(D[i]) * x[i] for i in range(self.G_size)) / total,
+                       GRB.MAXIMIZE)
+        return self._run(m, x, z, "Demand Coverage", True)
+
     def solve_per_group(self, group_idx, maximize=True):
         m, x, z = self._build_base(f"R{group_idx}_{'max' if maximize else 'min'}")
         m.setObjective(self._R(m, z, group_idx),
@@ -597,7 +617,7 @@ def main():
     parser.add_argument("--solver", type=str, default="pulp", choices=["pulp", "gurobi"])
     parser.add_argument("--time_limit", type=int, default=600)
     parser.add_argument("--metrics", type=str, nargs="+",
-                        default=["efficiency", "maxmin", "gini", "sen", "nash"],
+                        default=["efficiency", "maxmin", "gini", "sen", "nash", "demand_coverage"],
                         help="Which metrics to compute bounds for")
     args = parser.parse_args()
 
@@ -688,12 +708,25 @@ def main():
             results['sen_lb'] = r
 
         elif metric == "nash":
-            print("Nash Welfare = Π R_g")
+            print("Nash Welfare = Π R_g  (also report geometric mean)")
             print(f"{'─'*60}")
             print("\n  ▸ Upper Bound (best Nash Welfare):")
             r = solver.solve_nash_welfare(maximize=True)
             print_result(r)
             results['nash_ub'] = r
+            rr = r.get('returns')
+            if rr:
+                geom = float(np.exp(np.mean(np.log(np.clip(np.asarray(rr, dtype=float), 1e-12, None)))))
+                print(f"  Nash geometric mean (G={len(rr)}): {geom:.8f}")
+                results['nash_geom_ub'] = geom
+
+        elif metric == "demand_coverage":
+            print("Demand Coverage = served demand / total demand (cell-level reach)")
+            print(f"{'─'*60}")
+            print("\n  ▸ Upper Bound (max demand-weighted reach):")
+            r = solver.solve_demand_coverage()
+            print_result(r)
+            results['demand_coverage_ub'] = r
 
     # Summary
     print(f"\n{'='*60}")
@@ -710,6 +743,10 @@ def main():
             print(f"{key}: {results[key]['actual_gini']:.8f}")
     if 'nash_ub' in results and results['nash_ub'].get('value') is not None:
         print(f"nash_ub: {results['nash_ub']['value']:.8f}")
+    if 'nash_geom_ub' in results:
+        print(f"nash_geom_ub: {results['nash_geom_ub']:.8f}")
+    if 'demand_coverage_ub' in results and results['demand_coverage_ub'].get('value') is not None:
+        print(f"demand_coverage_ub: {results['demand_coverage_ub']['value']:.8f}")
 
 
 if __name__ == "__main__":
