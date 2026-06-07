@@ -33,6 +33,7 @@ export VECLIB_MAXIMUM_THREADS=1
 export PYTORCH_NUM_THREADS=1
 
 PAR=${PAR:-12}
+PROJECT=${PROJECT:-cl_ablation}   # wandb project (separate from Bobi's experiments)
 SEEDS=(42 123 456 789 1011)
 LOGDIR=logs/my_part
 mkdir -p "$LOGDIR"
@@ -41,7 +42,7 @@ mkdir -p "$LOGDIR"
 BASE="--env=xian --starting_loc_x=9 --starting_loc_y=19 --nr_stations=20 --nr_groups=10 \
 --timesteps=30000 --batch_size=256 --hidden_dim=128 --lr=0.01 --max_buffer_size=100 \
 --nr_layers=1 --num_er_episodes=100 --num_model_updates=5 --num_step_episodes=10 \
---project_name=RiDM --wandb_entity=johnario-tu-delft"
+--project_name=$PROJECT --wandb_entity=johnario-tu-delft"
 
 # --- 15 GCN configs -----------------------------------------------------------
 NAMES=(
@@ -83,7 +84,7 @@ run_gcn() {
 PCN_BASE="--env=xian --nr_groups=10 --nr_stations=20 --starting_loc_x=9 --starting_loc_y=19 \
 --timesteps=30000 --batch_size=256 --hidden_dim=128 --lr=0.01 --max_buffer_size=100 \
 --nr_layers=1 --num_er_episodes=100 --num_step_episodes=10 --num_model_updates=5 \
---num_policies=10 --project_name=RiDM"
+--num_policies=10 --project_name=$PROJECT"
 run_pcn() {
   local seed="$1" log="$LOGDIR/pcn_${seed}.log"
   if [ -f "$LOGDIR/pcn_${seed}.done" ]; then echo "[skip] pcn_${seed}"; return 0; fi
