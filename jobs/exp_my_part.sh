@@ -34,6 +34,8 @@ export PYTORCH_NUM_THREADS=1
 
 PAR=${PAR:-12}
 PROJECT=${PROJECT:-cl_ablation}   # wandb project (separate from Bobi's experiments)
+RUN_I3=${RUN_I3:-1}               # set 0 to skip the interpolate3 configs
+RUN_PCN=${RUN_PCN:-1}             # set 0 to skip the PCN baseline
 SEEDS=(42 123 456 789 1011)
 LOGDIR=logs/my_part
 mkdir -p "$LOGDIR"
@@ -44,12 +46,8 @@ BASE="--env=xian --starting_loc_x=9 --starting_loc_y=19 --nr_stations=20 --nr_gr
 --nr_layers=1 --num_er_episodes=100 --num_model_updates=5 --num_step_episodes=10 \
 --project_name=$PROJECT --wandb_entity=johnario-tu-delft"
 
-# --- 15 GCN configs -----------------------------------------------------------
-NAMES=(
-  nd pareto nash
-  i2_l0 i2_l05 i2_l1 i2_spatial i2_curriculum i2_spatiotemporal
-  i3_l0 i3_l05 i3_l1 i3_spatial i3_curriculum i3_spatiotemporal
-)
+# --- GCN configs: baselines + interpolate2 always; interpolate3 optional ------
+NAMES=( nd pareto nash i2_l0 i2_l05 i2_l1 i2_spatial i2_curriculum i2_spatiotemporal )
 FLAGS=(
   "--criterion=lorenz --distance_ref=nondominated"
   "--criterion=pareto"
@@ -60,13 +58,18 @@ FLAGS=(
   "--criterion=lorenz --distance_ref=interpolate2 --gcn_lambda=0.0 --spatial_alpha=0.5"
   "--criterion=lorenz --distance_ref=interpolate2 --gcn_lambda=0.0 --lambda_schedule=cosine --lambda_start=1.0 --lambda_end=0.0"
   "--criterion=lorenz --distance_ref=interpolate2 --gcn_lambda=0.0 --spatial_alpha=0.5 --lambda_schedule=cosine --lambda_start=1.0 --lambda_end=0.0"
-  "--criterion=lorenz --distance_ref=interpolate3 --gcn_lambda=0.0"
-  "--criterion=lorenz --distance_ref=interpolate3 --gcn_lambda=0.5"
-  "--criterion=lorenz --distance_ref=interpolate3 --gcn_lambda=1.0"
-  "--criterion=lorenz --distance_ref=interpolate3 --gcn_lambda=0.0 --spatial_alpha=0.5"
-  "--criterion=lorenz --distance_ref=interpolate3 --gcn_lambda=0.0 --lambda_schedule=cosine --lambda_start=1.0 --lambda_end=0.0"
-  "--criterion=lorenz --distance_ref=interpolate3 --gcn_lambda=0.0 --spatial_alpha=0.5 --lambda_schedule=cosine --lambda_start=1.0 --lambda_end=0.0"
 )
+if [ "$RUN_I3" = "1" ]; then
+  NAMES+=( i3_l0 i3_l05 i3_l1 i3_spatial i3_curriculum i3_spatiotemporal )
+  FLAGS+=(
+    "--criterion=lorenz --distance_ref=interpolate3 --gcn_lambda=0.0"
+    "--criterion=lorenz --distance_ref=interpolate3 --gcn_lambda=0.5"
+    "--criterion=lorenz --distance_ref=interpolate3 --gcn_lambda=1.0"
+    "--criterion=lorenz --distance_ref=interpolate3 --gcn_lambda=0.0 --spatial_alpha=0.5"
+    "--criterion=lorenz --distance_ref=interpolate3 --gcn_lambda=0.0 --lambda_schedule=cosine --lambda_start=1.0 --lambda_end=0.0"
+    "--criterion=lorenz --distance_ref=interpolate3 --gcn_lambda=0.0 --spatial_alpha=0.5 --lambda_schedule=cosine --lambda_start=1.0 --lambda_end=0.0"
+  )
+fi
 
 run_gcn() {
   local name="$1" flags="$2" seed="$3" tag="$1_$3" log
@@ -105,11 +108,13 @@ for ci in "${!NAMES[@]}"; do
     i=$((i + 1)); [ $((i % PAR)) -eq 0 ] && wait
   done
 done
-# PCN last (lowest priority)
-for s in "${SEEDS[@]}"; do
-  run_pcn "$s" &
-  i=$((i + 1)); [ $((i % PAR)) -eq 0 ] && wait
-done
+# PCN last (lowest priority; skip with RUN_PCN=0)
+if [ "$RUN_PCN" = "1" ]; then
+  for s in "${SEEDS[@]}"; do
+    run_pcn "$s" &
+    i=$((i + 1)); [ $((i % PAR)) -eq 0 ] && wait
+  done
+fi
 wait
 
 # --- summary ------------------------------------------------------------------
