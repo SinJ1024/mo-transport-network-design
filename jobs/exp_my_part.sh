@@ -71,6 +71,18 @@ if [ "$RUN_I3" = "1" ]; then
   )
 fi
 
+# MINIMAL=1: run ONLY the core 2x2 ablation (your contribution) — overrides the above
+if [ "${MINIMAL:-0}" = "1" ]; then
+  NAMES=( i2_l0 i2_spatial i2_curriculum i2_spatiotemporal )
+  FLAGS=(
+    "--criterion=lorenz --distance_ref=interpolate2 --gcn_lambda=0.0"
+    "--criterion=lorenz --distance_ref=interpolate2 --gcn_lambda=0.0 --spatial_alpha=0.5"
+    "--criterion=lorenz --distance_ref=interpolate2 --gcn_lambda=0.0 --lambda_schedule=cosine --lambda_start=1.0 --lambda_end=0.0"
+    "--criterion=lorenz --distance_ref=interpolate2 --gcn_lambda=0.0 --spatial_alpha=0.5 --lambda_schedule=cosine --lambda_start=1.0 --lambda_end=0.0"
+  )
+  RUN_PCN=0
+fi
+
 run_gcn() {
   local name="$1" flags="$2" seed="$3" tag="$1_$3" log
   log="$LOGDIR/${name}_${seed}.log"
