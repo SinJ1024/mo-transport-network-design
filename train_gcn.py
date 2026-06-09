@@ -105,12 +105,12 @@ if __name__ == "__main__":
     parser.add_argument('--seed', default=42, type=int)
     parser.add_argument('--cd_threshold', default=0.2, type=float, help='controls the threshold for crowdedness distance.')
     parser.add_argument('--distance_ref', default='nondominated', type=str, choices=['nondominated', 'optimal_max', 'nondominated_mean', 'interpolate', 'interpolate2', 'interpolate3'], help='controls the reference point for calculating the distance of every solution to the optimal point.')
-    parser.add_argument('--gcn_lambda', default=None, type=float, help='value between 0 and 1. Controls the size of the front to explore. lambda -> 1: full pareto front. lambda -> 0 full lorenz front.')
-    parser.add_argument('--lambda_schedule', default='constant', type=str, choices=['constant', 'linear', 'cosine', 'step'], help='temporal schedule for lambda curriculum.')
-    parser.add_argument('--lambda_start', default=1.0, type=float, help='initial lambda value for curriculum.')
-    parser.add_argument('--lambda_end', default=None, type=float, help='target lambda value for curriculum (defaults to --gcn_lambda).')
-    parser.add_argument('--lambda_warmup_fraction', default=0.0, type=float, help='fraction of training to keep lambda at lambda_start.')
-    parser.add_argument('--lambda_freeze_fraction', default=0.1, type=float, help='fraction of training at end to keep lambda at lambda_end.')
+    parser.add_argument('--lcn_lambda', default=None, type=float, help='value between 0 and 1. Controls the size of the front to explore. lambda -> 1: full pareto front. lambda -> 0 full lorenz front.')
+    parser.add_argument('--scheduling_method', default='constant', type=str, choices=['constant', 'linear', 'cosine', 'step'], help='temporal schedule for hyperparameter curriculum.')
+    parser.add_argument('--schedule_start', default=1.0, type=float, help='initial hyperparameter value for curriculum.')
+    parser.add_argument('--schedule_end', default=None, type=float, help='target hyperparameter value for curriculum (defaults to --gcn_lambda).')
+    parser.add_argument('--scheduler_warmup_fraction', default=0.0, type=float, help='fraction of training to keep hyperparameter at schedule_start.')
+    parser.add_argument('--scheduler_freeze_fraction', default=0.1, type=float, help='fraction of training at end to keep hyperparameter at schedule_end.')
     parser.add_argument('--spatial_alpha', default=0.0, type=float, help='spatial scaling factor for per-episode effective lambda. 0 disables spatial component.')
     parser.add_argument('--include_demand_context', action='store_true', default=False, help='augment observation with normalized OD demand context.')
     parser.add_argument('--criterion', default='lorenz',  choices=['pareto', 'lorenz', 'nash', 'alpha'], type=str)
@@ -135,7 +135,7 @@ if __name__ == "__main__":
         args.dominance_func, args.l2_func = get_non_pareto_dominated, lorenz_l2
         args.fairness_params = args.fairness_params | {
             'distance_ref': args.distance_ref,
-            'lcn_lambda': args.gcn_lambda,
+            'lcn_lambda': args.lcn_lambda,
             'spatial_alpha': args.spatial_alpha
         }
     elif args.criterion == 'nash':
@@ -148,22 +148,22 @@ if __name__ == "__main__":
             fairness_params['top_k'] = args.nash_top_k
 
     args.scheduler = None
-    if args.lambda_schedule != 'constant':
+    if args.scheduling_method != 'constant':
         args.scheduler = HyperparamScheduler(
-            schedule_type=args.lambda_schedule,
+            schedule_type=args.scheduling_method,
             target_key='lcn_lambda',
-            start_val=args.lambda_start,
-            end_val=args.lambda_end if args.lambda_end is not None else args.gcn_lambda,
+            start_val=args.schedule_start,
+            end_val=args.schedule_start if args.schedule_start is not None else args.lcn_lambda,
             total_timesteps=args.timesteps,
-            warmup_fraction=args.lambda_warmup_fraction,
-            freeze_fraction=args.lambda_freeze_fraction
+            warmup_fraction=args.scheduler_warmup_fraction,
+            freeze_fraction=args.scheduler_freeze_fraction
         )
 
     # Some values are hardcoded for each environment (this is flexible, but we don't want to have to pass 100 arguments to the script)
     if args.env == 'amsterdam':
         args.city_path = Path(f"./envs/mo-tndp/cities/amsterdam")
         args.gym_env = 'motndp_amsterdam-v0'
-        args.project_name = "MORL-TNDP"
+        args.project_name = "RiDM"
         args.groups_file = f"price_groups_{args.nr_groups}.txt"
         args.ignore_existing_lines = True
         args.experiment_name = "GCN-Amsterdam"
@@ -174,7 +174,7 @@ if __name__ == "__main__":
     elif args.env == 'xian':
         args.city_path = Path(f"./envs/mo-tndp/cities/xian")
         args.gym_env = 'motndp_xian-v0'
-        args.project_name = "MORL-TNDP"
+        args.project_name = "RiDM"
         args.groups_file = f"price_groups_{args.nr_groups}.txt"
         args.ignore_existing_lines = True
         args.experiment_name = "GCN-Xian"
