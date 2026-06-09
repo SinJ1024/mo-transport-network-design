@@ -85,10 +85,10 @@ if __name__ == "__main__":
     # Acceptable values: 'dilemma', 'margins', 'amsterdam', 'dst'
     parser.add_argument('--env', default='xian', type=str)
     # For amsterdam environment we have different groups files (different nr of objectives)
-    parser.add_argument('--nr_groups', default=5, type=int)
+    parser.add_argument('--nr_groups', default=10, type=int)
     # Starting location of the agent
-    parser.add_argument('--starting_loc_x', default=None, type=int)
-    parser.add_argument('--starting_loc_y', default=None, type=int)
+    parser.add_argument('--starting_loc_x', default=9, type=int)
+    parser.add_argument('--starting_loc_y', default=19, type=int)
     # Episode horizon -- used as a proxy of both the budget and the number of stations (stations are not really costed)
     parser.add_argument('--nr_stations', type=int, required=True)
     parser.add_argument('--lr', default=1e-2, type=float)
