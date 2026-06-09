@@ -51,7 +51,7 @@ def main(args):
         hidden_dim=args.hidden_dim,
         dominance_func=args.dominance_func,
         l2_func=args.l2_func,
-        l2_params=args.l2_params,
+        fairness_params=args.fairness_params,
         hyperparam_scheduler=args.scheduler,
         cd_threshold=args.cd_threshold,
         model_class=DefaultGCNModel
@@ -113,7 +113,7 @@ if __name__ == "__main__":
     parser.add_argument('--lambda_freeze_fraction', default=0.1, type=float, help='fraction of training at end to keep lambda at lambda_end.')
     parser.add_argument('--spatial_alpha', default=0.0, type=float, help='spatial scaling factor for per-episode effective lambda. 0 disables spatial component.')
     parser.add_argument('--include_demand_context', action='store_true', default=False, help='augment observation with normalized OD demand context.')
-    parser.add_argument('--criterion', default='lorenz',  choices=['pareto', 'lorenz', 'nash'], type=str)
+    parser.add_argument('--criterion', default='lorenz',  choices=['pareto', 'lorenz', 'nash', 'alpha'], type=str)
     # NSW params:
     parser.add_argument('--nash_mode', default='pareto_sized', choices=['pareto_filter', 'pareto_sized'])
     parser.add_argument('--nash_top_k', default=None, type=int)
@@ -126,24 +126,26 @@ if __name__ == "__main__":
     torch.manual_seed(args.seed)
     random.seed(args.seed)
 
+    args.fairness_params = {
+            'fairness': args.criterion
+    }
     if args.criterion == 'pareto':
         args.dominance_func, args.l2_func = get_non_pareto_dominated, pareto_l2
-        args.l2_params = {}
     elif args.criterion == "lorenz":
         args.dominance_func, args.l2_func = get_non_pareto_dominated, lorenz_l2
-        args.l2_params = {
+        args.fairness_params = args.fairness_params | {
             'distance_ref': args.distance_ref,
             'lcn_lambda': args.gcn_lambda,
             'spatial_alpha': args.spatial_alpha
         }
     elif args.criterion == 'nash':
         args.dominance_func, args.l2_func = get_nash_dominated, nash_l2
-        args.l2_params = {
+        args.fairness_params = args.fairness_params | {
             'mode': args.nash_mode,
             'shift': args.nash_shift
         }
         if args.nash_top_k is not None:
-            l2_params['top_k'] = args.nash_top_k
+            fairness_params['top_k'] = args.nash_top_k
 
     args.scheduler = None
     if args.lambda_schedule != 'constant':
