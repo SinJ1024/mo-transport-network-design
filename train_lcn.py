@@ -57,6 +57,7 @@ def main(args):
             batch_size=args.batch_size,
             project_name=args.project_name,
             experiment_name=args.experiment_name,
+            wandb_entity=args.wandb_entity,
             log=not args.no_log,
             seed=args.seed,
             nr_layers=args.nr_layers,
@@ -128,6 +129,9 @@ if __name__ == "__main__":
     parser.add_argument('--lambda_freeze_fraction', default=0.1, type=float, help='fraction of training at end to keep lambda at lambda_end.')
     parser.add_argument('--spatial_alpha', default=0.0, type=float, help='spatial scaling factor for per-episode effective lambda. 0 disables spatial component.')
     parser.add_argument('--include_demand_context', action='store_true', default=False, help='augment observation with normalized OD demand context.')
+    parser.add_argument('--project_name', default=None, type=str)
+    parser.add_argument('--experiment_name', default=None, type=str)
+    parser.add_argument('--wandb_entity', default=None, type=str)
 
     args = parser.parse_args()
     print(args)
@@ -164,10 +168,10 @@ if __name__ == "__main__":
     elif args.env == 'amsterdam':
         args.city_path = Path(f"./envs/mo-tndp/cities/amsterdam")
         args.gym_env = 'motndp_amsterdam-v0'
-        args.project_name = "MORL-TNDP"
+        args.project_name = args.project_name or "MORL-TNDP"
         args.groups_file = f"price_groups_{args.nr_groups}.txt"
         args.ignore_existing_lines = True
-        args.experiment_name = "LCN-Amsterdam"
+        args.experiment_name = args.experiment_name or "LCN-Amsterdam"
         args.scaling_factor = np.array([100] * args.nr_groups + [0.01])
         args.ref_point = np.array([0] * args.nr_groups)
         args.max_return=np.array([1] * args.nr_groups)
@@ -175,18 +179,18 @@ if __name__ == "__main__":
     elif args.env == 'xian':
         args.city_path = Path(f"./envs/mo-tndp/cities/xian")
         args.gym_env = 'motndp_xian-v0'
-        args.project_name = "MORL-TNDP"
+        args.project_name = args.project_name or "MORL-TNDP"
         args.groups_file = f"price_groups_{args.nr_groups}.txt"
         args.ignore_existing_lines = True
-        args.experiment_name = "LCN-Xian"
+        args.experiment_name = args.experiment_name or "LCN-Xian"
         args.scaling_factor = np.array([100] * args.nr_groups + [0.01])
         args.ref_point = np.array([0] * args.nr_groups)
         args.max_return=np.array([1] * args.nr_groups)
         args.pf_plot_limits = None
     elif args.env == 'dst':
         args.gym_env = 'deep-sea-treasure-concave-v0'
-        args.project_name = "DST"
-        args.experiment_name = "LCN-DST"
+        args.project_name = args.project_name or "DST"
+        args.experiment_name = args.experiment_name or "LCN-DST"
         args.scaling_factor = np.array([0.1, 0.1, 0.01])
         args.ref_point = np.array([0.0, -200.0])
         args.max_return=np.array([124, -1])
