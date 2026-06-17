@@ -327,3 +327,9 @@ OK    amsterdam_g10_spatial_s42
 OK    amsterdam_g10_spatial_s123
 OK    amsterdam_g10_spatiotemporal_s42
 OK    amsterdam_g10_spatiotemporal_s123
+OK    amsterdam_g10_spatiotemporal_s456
+OK    amsterdam_g10_spatiotemporal_s1024
+OK    amsterdam_g10_spatial_s789
+OK    amsterdam_g10_spatiotemporal_s789
+
+All runs finished. Logs: logs/gcn_ablation/  (re-run this script to resume any FAIL/missing).

@@ -60,24 +60,25 @@ PALETTE = {
 # Final-step metrics for table and bar charts
 # key → (display name, higher-is-better)
 METRICS = {
-    "eval/hypervolume":            ("HV",            True),
+    "eval/hypervolume_pdim":       ("HV (per-dim)",  True),
     "eval/eum":                    ("EUM",            True),
     "eval/sen_welfare_median":     ("Sen Welfare",    True),
     "eval/demand_coverage_median": ("Coverage Rate",  True),
     "eval/served_floor_median":    ("Served Floor",   True),
     "eval/gini_median":            ("Gini",           False),
     "eval/efficiency_median":      ("Efficiency",     True),
-    "eval/spatial_sw_high_median": ("Spatial SW (High)", True),
+    "eval/spatial_sw_high_median": ("Spatial SW High Median", True),
 }
 
 # Metrics shown on training curves
 CURVE_METRICS = {
-    "eval/hypervolume":            "Hypervolume",
+    "eval/hypervolume_pdim":       "HV (per-dim)",
     "eval/eum":                    "EUM",
     "eval/sen_welfare_median":     "Sen Welfare",
     "eval/demand_coverage_median": "Coverage Rate",
-    "eval/spatial_sw_high_median": "Spatial SW (High)",
+    "eval/spatial_sw_high_median": "Spatial SW High Median",
 }
+CURVE_SMOOTH = 5   # rolling window (on ~30 eval points; 5 ≈ light smoothing)
 
 SAVEDIR = Path("figures/ablation")
 SAVEDIR.mkdir(parents=True, exist_ok=True)
@@ -183,17 +184,23 @@ def plot_training_curves(df_hist: pd.DataFrame, env: str):
             sub = df[(df["env"] == env) & (df["groups"] == g)]
             any_plotted = False
             for cfg in CONFIGS:
-                c = sub[sub["config"] == cfg].dropna(subset=[metric])
+                c = sub[sub["config"] == cfg].dropna(subset=[metric]).copy()
                 if c.empty:
                     continue
-                grp  = c.groupby("global_step")[metric]
+                # Bin steps to 1000-step intervals so seeds with slightly
+                # different eval schedules are grouped together correctly.
+                c["step_bin"] = (c["global_step"] // 1000) * 1000
+                grp  = c.groupby("step_bin")[metric]
                 mean = grp.mean()
                 std  = grp.std().fillna(0)
-                ax.plot(mean.index, mean.values,
+                w = CURVE_SMOOTH
+                mean_s = mean.rolling(w, center=True, min_periods=1).mean()
+                std_s  = std.rolling(w, center=True, min_periods=1).mean()
+                ax.plot(mean_s.index, mean_s.values,
                         label=CONFIG_LABELS[cfg], color=PALETTE[cfg], linewidth=1.6)
-                ax.fill_between(mean.index,
-                                (mean - std).values, (mean + std).values,
-                                alpha=0.12, color=PALETTE[cfg])
+                ax.fill_between(mean_s.index,
+                                (mean_s - std_s).values, (mean_s + std_s).values,
+                                alpha=0.15, color=PALETTE[cfg])
                 any_plotted = True
 
             ax.set_title(f"G = {g}", fontsize=11)
@@ -272,6 +279,72 @@ def plot_bar_per_metric(df: pd.DataFrame, env: str):
             fig.savefig(SAVEDIR / f"bar_{env}_{tag}.{ext}", bbox_inches="tight")
         print(f"  Saved bar_{env}_{tag}.pdf")
         plt.close(fig)
+
+
+def plot_bar_combined(df: pd.DataFrame, env: str):
+    """All metrics in one figure: subplots grid, x=config, bars per group."""
+    sub = df[df["env"] == env]
+    if sub.empty:
+        return
+
+    active = [(k, lbl) for k, (lbl, _) in METRICS.items() if _has_data(df, env, k)]
+    if not active:
+        return
+
+    ncols = 4
+    nrows = int(np.ceil(len(active) / ncols))
+    fig, axes = plt.subplots(nrows, ncols,
+                             figsize=(5 * ncols, 3.5 * nrows), squeeze=False)
+    fig.suptitle(f"{env.capitalize()} — All Metrics", fontsize=13)
+
+    n_configs = len(CONFIGS)
+    x = np.arange(n_configs)
+    width = 0.18
+    present_groups = sorted(sub["groups"].unique())
+    offsets = np.linspace(-(len(present_groups) - 1) / 2,
+                           (len(present_groups) - 1) / 2,
+                           len(present_groups)) * width
+    group_colors = {g: c for g, c in zip(present_groups,
+                    plt.rcParams["axes.prop_cycle"].by_key()["color"])}
+
+    for idx, (metric, label) in enumerate(active):
+        ax = axes[idx // ncols][idx % ncols]
+        records = []
+        for g in present_groups:
+            for cfg in CONFIGS:
+                vals = sub[(sub["groups"] == g) & (sub["config"] == cfg)][metric].dropna()
+                if len(vals):
+                    records.append(dict(groups=g, config=cfg,
+                                        mean=vals.mean(), std=vals.std(ddof=0)))
+        tmp = pd.DataFrame(records)
+        for off, g in zip(offsets, present_groups):
+            row = tmp[tmp["groups"] == g]
+            means = [row[row["config"] == c]["mean"].values[0]
+                     if len(row[row["config"] == c]) else np.nan for c in CONFIGS]
+            stds  = [row[row["config"] == c]["std"].values[0]
+                     if len(row[row["config"] == c]) else 0  for c in CONFIGS]
+            ax.bar(x + off, means, width, yerr=stds, capsize=3,
+                   color=group_colors[g], label=f"G={g}", alpha=0.85,
+                   error_kw={"linewidth": 0.8})
+        ax.set_title(label, fontsize=10)
+        ax.set_xticks(x)
+        ax.set_xticklabels([CONFIG_LABELS[c] for c in CONFIGS], fontsize=8, rotation=15, ha="right")
+
+    # hide unused axes
+    for idx in range(len(active), nrows * ncols):
+        axes[idx // ncols][idx % ncols].set_visible(False)
+
+    handles = [plt.Rectangle((0, 0), 1, 1, alpha=0.85, color=group_colors[g])
+               for g in present_groups]
+    fig.legend(handles, [f"G={g}" for g in present_groups],
+               title="Nr. groups", loc="lower center",
+               ncol=len(present_groups), frameon=False,
+               bbox_to_anchor=(0.5, -0.03))
+    fig.tight_layout()
+    for ext in ("pdf", "png"):
+        fig.savefig(SAVEDIR / f"bar_{env}.{ext}", bbox_inches="tight")
+    print(f"  Saved bar_{env}.pdf")
+    plt.close(fig)
 
 
 def plot_configs_across_groups(df: pd.DataFrame, env: str):
@@ -473,6 +546,10 @@ def main():
     print("\nGenerating bar charts (per metric) …")
     for env in args.env:
         plot_bar_per_metric(df, env)
+
+    print("\nGenerating combined bar charts …")
+    for env in args.env:
+        plot_bar_combined(df, env)
 
     print("\nGenerating metrics-vs-groups line plots …")
     for env in args.env:

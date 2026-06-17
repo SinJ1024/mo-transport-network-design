@@ -5,12 +5,12 @@
 \label{tab:ablation_xian_g3}
 \begin{tabular}{lcccccccc}
 \toprule
-Method & HV & EUM & Sen Welfare & Coverage Rate & Served Floor & Gini & Efficiency & Spatial SW (High) \\
+Method & HV (per-dim) & EUM & Sen Welfare & Coverage Rate & Served Floor & Gini & Efficiency & Spatial SW High Median \\
 \midrule
-GCN-Lorenz & 1.1349 $\pm$ 0.0169 & 0.0117 $\pm$ 0.0007 & 0.0306 $\pm$ 0.0029 & 0.0947 $\pm$ 0.0050 & 0.1385 $\pm$ 0.0093 & 0.1066 $\pm$ 0.0295 & 0.0342 $\pm$ 0.0023 & 0.0188 $\pm$ 0.0014 \\
-GCN-Temporal & 1.1268 $\pm$ 0.0196 & \textbf{0.0121 $\pm$ 0.0005} & \textbf{0.0312 $\pm$ 0.0021} & \textbf{0.0980 $\pm$ 0.0021} & 0.1290 $\pm$ 0.0105 & 0.1093 $\pm$ 0.0315 & \textbf{0.0351 $\pm$ 0.0015} & \textbf{0.0196 $\pm$ 0.0010} \\
-GCN-Spatial & 1.1308 $\pm$ 0.0164 & 0.0114 $\pm$ 0.0003 & 0.0286 $\pm$ 0.0008 & 0.0958 $\pm$ 0.0032 & 0.1402 $\pm$ 0.0098 & 0.1193 $\pm$ 0.0227 & 0.0326 $\pm$ 0.0017 & 0.0187 $\pm$ 0.0005 \\
-GCN-Spatiotemporal & \textbf{1.1373 $\pm$ 0.0277} & 0.0119 $\pm$ 0.0009 & 0.0309 $\pm$ 0.0030 & 0.0960 $\pm$ 0.0047 & \textbf{0.1423 $\pm$ 0.0154} & \textbf{0.1017 $\pm$ 0.0147} & 0.0345 $\pm$ 0.0032 & \textbf{0.0196 $\pm$ 0.0012} \\
+GCN-Lorenz & 1.0431 $\pm$ 0.0052 & 0.0117 $\pm$ 0.0007 & 0.0306 $\pm$ 0.0029 & 0.0947 $\pm$ 0.0050 & 0.1385 $\pm$ 0.0093 & 0.1066 $\pm$ 0.0295 & 0.0342 $\pm$ 0.0023 & 0.0188 $\pm$ 0.0014 \\
+GCN-Temporal & 1.0406 $\pm$ 0.0060 & \textbf{0.0121 $\pm$ 0.0005} & \textbf{0.0312 $\pm$ 0.0021} & \textbf{0.0980 $\pm$ 0.0021} & 0.1290 $\pm$ 0.0105 & 0.1093 $\pm$ 0.0315 & \textbf{0.0351 $\pm$ 0.0015} & \textbf{0.0196 $\pm$ 0.0010} \\
+GCN-Spatial & 1.0418 $\pm$ 0.0050 & 0.0114 $\pm$ 0.0003 & 0.0286 $\pm$ 0.0008 & 0.0958 $\pm$ 0.0032 & 0.1402 $\pm$ 0.0098 & 0.1193 $\pm$ 0.0227 & 0.0326 $\pm$ 0.0017 & 0.0187 $\pm$ 0.0005 \\
+GCN-Spatiotemporal & \textbf{1.0438 $\pm$ 0.0086} & 0.0119 $\pm$ 0.0009 & 0.0309 $\pm$ 0.0030 & 0.0960 $\pm$ 0.0047 & \textbf{0.1423 $\pm$ 0.0154} & \textbf{0.1017 $\pm$ 0.0147} & 0.0345 $\pm$ 0.0032 & \textbf{0.0196 $\pm$ 0.0012} \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -23,12 +23,12 @@ GCN-Spatiotemporal & \textbf{1.1373 $\pm$ 0.0277} & 0.0119 $\pm$ 0.0009 & 0.0309
 \label{tab:ablation_xian_g5}
 \begin{tabular}{lcccccccc}
 \toprule
-Method & HV & EUM & Sen Welfare & Coverage Rate & Served Floor & Gini & Efficiency & Spatial SW (High) \\
+Method & HV (per-dim) & EUM & Sen Welfare & Coverage Rate & Served Floor & Gini & Efficiency & Spatial SW High Median \\
 \midrule
-GCN-Lorenz & \textbf{1.0343 $\pm$ 0.1424} & 0.0116 $\pm$ 0.0006 & 0.0385 $\pm$ 0.0012 & \textbf{0.0880 $\pm$ 0.0066} & 0.1288 $\pm$ 0.0238 & 0.2424 $\pm$ 0.0343 & \textbf{0.0505 $\pm$ 0.0034} & 0.0160 $\pm$ 0.0020 \\
-GCN-Temporal & 0.9564 $\pm$ 0.1504 & \textbf{0.0117 $\pm$ 0.0005} & \textbf{0.0391 $\pm$ 0.0009} & 0.0877 $\pm$ 0.0025 & 0.1333 $\pm$ 0.0082 & 0.2197 $\pm$ 0.0299 & 0.0504 $\pm$ 0.0023 & 0.0165 $\pm$ 0.0010 \\
-GCN-Spatial & 0.8120 $\pm$ 0.1728 & 0.0114 $\pm$ 0.0009 & 0.0363 $\pm$ 0.0028 & 0.0879 $\pm$ 0.0057 & 0.1220 $\pm$ 0.0141 & 0.2233 $\pm$ 0.0119 & 0.0477 $\pm$ 0.0036 & 0.0159 $\pm$ 0.0018 \\
-GCN-Spatiotemporal & 0.8443 $\pm$ 0.1350 & \textbf{0.0117 $\pm$ 0.0008} & 0.0380 $\pm$ 0.0025 & \textbf{0.0880 $\pm$ 0.0063} & \textbf{0.1352 $\pm$ 0.0102} & \textbf{0.2128 $\pm$ 0.0222} & 0.0483 $\pm$ 0.0036 & \textbf{0.0166 $\pm$ 0.0014} \\
+GCN-Lorenz & \textbf{1.0052 $\pm$ 0.0285} & 0.0116 $\pm$ 0.0006 & 0.0385 $\pm$ 0.0012 & \textbf{0.0880 $\pm$ 0.0066} & 0.1288 $\pm$ 0.0238 & 0.2424 $\pm$ 0.0343 & \textbf{0.0505 $\pm$ 0.0034} & 0.0160 $\pm$ 0.0020 \\
+GCN-Temporal & 0.9889 $\pm$ 0.0340 & \textbf{0.0117 $\pm$ 0.0005} & \textbf{0.0391 $\pm$ 0.0009} & 0.0877 $\pm$ 0.0025 & 0.1333 $\pm$ 0.0082 & 0.2197 $\pm$ 0.0299 & 0.0504 $\pm$ 0.0023 & 0.0165 $\pm$ 0.0010 \\
+GCN-Spatial & 0.9557 $\pm$ 0.0406 & 0.0114 $\pm$ 0.0009 & 0.0363 $\pm$ 0.0028 & 0.0879 $\pm$ 0.0057 & 0.1220 $\pm$ 0.0141 & 0.2233 $\pm$ 0.0119 & 0.0477 $\pm$ 0.0036 & 0.0159 $\pm$ 0.0018 \\
+GCN-Spatiotemporal & 0.9646 $\pm$ 0.0323 & \textbf{0.0117 $\pm$ 0.0008} & 0.0380 $\pm$ 0.0025 & \textbf{0.0880 $\pm$ 0.0063} & \textbf{0.1352 $\pm$ 0.0102} & \textbf{0.2128 $\pm$ 0.0222} & 0.0483 $\pm$ 0.0036 & \textbf{0.0166 $\pm$ 0.0014} \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -41,12 +41,12 @@ GCN-Spatiotemporal & 0.8443 $\pm$ 0.1350 & \textbf{0.0117 $\pm$ 0.0008} & 0.0380
 \label{tab:ablation_xian_g7}
 \begin{tabular}{lcccccccc}
 \toprule
-Method & HV & EUM & Sen Welfare & Coverage Rate & Served Floor & Gini & Efficiency & Spatial SW (High) \\
+Method & HV (per-dim) & EUM & Sen Welfare & Coverage Rate & Served Floor & Gini & Efficiency & Spatial SW High Median \\
 \midrule
-GCN-Lorenz & \textbf{0.6948 $\pm$ 0.1922} & 0.0107 $\pm$ 0.0011 & 0.0469 $\pm$ 0.0063 & 0.0829 $\pm$ 0.0075 & 0.1244 $\pm$ 0.0167 & \textbf{0.2344 $\pm$ 0.0363} & 0.0612 $\pm$ 0.0089 & 0.0142 $\pm$ 0.0029 \\
-GCN-Temporal & 0.5488 $\pm$ 0.2666 & 0.0118 $\pm$ 0.0007 & 0.0476 $\pm$ 0.0055 & 0.0864 $\pm$ 0.0109 & \textbf{0.1348 $\pm$ 0.0165} & 0.2596 $\pm$ 0.0340 & 0.0658 $\pm$ 0.0107 & 0.0162 $\pm$ 0.0026 \\
-GCN-Spatial & 0.5518 $\pm$ 0.1891 & 0.0111 $\pm$ 0.0008 & 0.0441 $\pm$ 0.0036 & 0.0857 $\pm$ 0.0057 & 0.1172 $\pm$ 0.0032 & 0.2676 $\pm$ 0.0222 & 0.0602 $\pm$ 0.0065 & 0.0143 $\pm$ 0.0014 \\
-GCN-Spatiotemporal & 0.6482 $\pm$ 0.2591 & \textbf{0.0121 $\pm$ 0.0005} & \textbf{0.0510 $\pm$ 0.0038} & \textbf{0.0875 $\pm$ 0.0061} & 0.1162 $\pm$ 0.0122 & 0.2594 $\pm$ 0.0309 & \textbf{0.0680 $\pm$ 0.0047} & \textbf{0.0163 $\pm$ 0.0009} \\
+GCN-Lorenz & \textbf{0.9444 $\pm$ 0.0400} & 0.0107 $\pm$ 0.0011 & 0.0469 $\pm$ 0.0063 & 0.0829 $\pm$ 0.0075 & 0.1244 $\pm$ 0.0167 & \textbf{0.2344 $\pm$ 0.0363} & 0.0612 $\pm$ 0.0089 & 0.0142 $\pm$ 0.0029 \\
+GCN-Temporal & 0.9047 $\pm$ 0.0634 & 0.0118 $\pm$ 0.0007 & 0.0476 $\pm$ 0.0055 & 0.0864 $\pm$ 0.0109 & \textbf{0.1348 $\pm$ 0.0165} & 0.2596 $\pm$ 0.0340 & 0.0658 $\pm$ 0.0107 & 0.0162 $\pm$ 0.0026 \\
+GCN-Spatial & 0.9113 $\pm$ 0.0478 & 0.0111 $\pm$ 0.0008 & 0.0441 $\pm$ 0.0036 & 0.0857 $\pm$ 0.0057 & 0.1172 $\pm$ 0.0032 & 0.2676 $\pm$ 0.0222 & 0.0602 $\pm$ 0.0065 & 0.0143 $\pm$ 0.0014 \\
+GCN-Spatiotemporal & 0.9264 $\pm$ 0.0703 & \textbf{0.0121 $\pm$ 0.0005} & \textbf{0.0510 $\pm$ 0.0038} & \textbf{0.0875 $\pm$ 0.0061} & 0.1162 $\pm$ 0.0122 & 0.2594 $\pm$ 0.0309 & \textbf{0.0680 $\pm$ 0.0047} & \textbf{0.0163 $\pm$ 0.0009} \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -59,12 +59,12 @@ GCN-Spatiotemporal & 0.6482 $\pm$ 0.2591 & \textbf{0.0121 $\pm$ 0.0005} & \textb
 \label{tab:ablation_xian_g10}
 \begin{tabular}{lcccccccc}
 \toprule
-Method & HV & EUM & Sen Welfare & Coverage Rate & Served Floor & Gini & Efficiency & Spatial SW (High) \\
+Method & HV (per-dim) & EUM & Sen Welfare & Coverage Rate & Served Floor & Gini & Efficiency & Spatial SW High Median \\
 \midrule
-GCN-Lorenz & 0.0348 $\pm$ 0.0145 & 0.0110 $\pm$ 0.0008 & 0.0483 $\pm$ 0.0115 & 0.0750 $\pm$ 0.0082 & 0.1070 $\pm$ 0.0206 & 0.3448 $\pm$ 0.0214 & 0.0704 $\pm$ 0.0164 & 0.0122 $\pm$ 0.0026 \\
-GCN-Temporal & \textbf{0.0681 $\pm$ 0.0622} & 0.0114 $\pm$ 0.0006 & 0.0538 $\pm$ 0.0067 & \textbf{0.0845 $\pm$ 0.0106} & \textbf{0.1183 $\pm$ 0.0143} & \textbf{0.3332 $\pm$ 0.0329} & 0.0820 $\pm$ 0.0049 & \textbf{0.0147 $\pm$ 0.0023} \\
-GCN-Spatial & 0.0339 $\pm$ 0.0341 & 0.0120 $\pm$ 0.0009 & \textbf{0.0552 $\pm$ 0.0046} & 0.0810 $\pm$ 0.0074 & 0.1097 $\pm$ 0.0086 & 0.3447 $\pm$ 0.0310 & \textbf{0.0829 $\pm$ 0.0080} & 0.0142 $\pm$ 0.0017 \\
-GCN-Spatiotemporal & 0.0113 $\pm$ 0.0080 & \textbf{0.0121 $\pm$ 0.0007} & 0.0451 $\pm$ 0.0036 & 0.0743 $\pm$ 0.0058 & 0.1113 $\pm$ 0.0069 & 0.3378 $\pm$ 0.0182 & 0.0698 $\pm$ 0.0037 & 0.0122 $\pm$ 0.0009 \\
+GCN-Lorenz & 0.7086 $\pm$ 0.0322 & 0.0110 $\pm$ 0.0008 & 0.0483 $\pm$ 0.0115 & 0.0750 $\pm$ 0.0082 & 0.1070 $\pm$ 0.0206 & 0.3448 $\pm$ 0.0214 & 0.0704 $\pm$ 0.0164 & 0.0122 $\pm$ 0.0026 \\
+GCN-Temporal & \textbf{0.7232 $\pm$ 0.0885} & 0.0114 $\pm$ 0.0006 & 0.0538 $\pm$ 0.0067 & \textbf{0.0845 $\pm$ 0.0106} & \textbf{0.1183 $\pm$ 0.0143} & \textbf{0.3332 $\pm$ 0.0329} & 0.0820 $\pm$ 0.0049 & \textbf{0.0147 $\pm$ 0.0023} \\
+GCN-Spatial & 0.6697 $\pm$ 0.0842 & 0.0120 $\pm$ 0.0009 & \textbf{0.0552 $\pm$ 0.0046} & 0.0810 $\pm$ 0.0074 & 0.1097 $\pm$ 0.0086 & 0.3447 $\pm$ 0.0310 & \textbf{0.0829 $\pm$ 0.0080} & 0.0142 $\pm$ 0.0017 \\
+GCN-Spatiotemporal & 0.6261 $\pm$ 0.0406 & \textbf{0.0121 $\pm$ 0.0007} & 0.0451 $\pm$ 0.0036 & 0.0743 $\pm$ 0.0058 & 0.1113 $\pm$ 0.0069 & 0.3378 $\pm$ 0.0182 & 0.0698 $\pm$ 0.0037 & 0.0122 $\pm$ 0.0009 \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -77,12 +77,12 @@ GCN-Spatiotemporal & 0.0113 $\pm$ 0.0080 & \textbf{0.0121 $\pm$ 0.0007} & 0.0451
 \label{tab:ablation_amsterdam_g3}
 \begin{tabular}{lcccccccc}
 \toprule
-Method & HV & EUM & Sen Welfare & Coverage Rate & Served Floor & Gini & Efficiency & Spatial SW (High) \\
+Method & HV (per-dim) & EUM & Sen Welfare & Coverage Rate & Served Floor & Gini & Efficiency & Spatial SW High Median \\
 \midrule
-GCN-Lorenz & \textbf{0.3277 $\pm$ 0.0991} & 0.0041 $\pm$ 0.0002 & \textbf{0.0050 $\pm$ 0.0001} & 0.0265 $\pm$ 0.0007 & \textbf{0.1127 $\pm$ 0.0065} & \textbf{0.3513 $\pm$ 0.0211} & 0.0079 $\pm$ 0.0001 & 0.0044 $\pm$ 0.0002 \\
-GCN-Temporal & 0.2610 $\pm$ 0.0309 & 0.0043 $\pm$ 0.0001 & \textbf{0.0050 $\pm$ 0.0001} & 0.0270 $\pm$ 0.0005 & 0.0974 $\pm$ 0.0256 & 0.3908 $\pm$ 0.0107 & 0.0083 $\pm$ 0.0002 & 0.0046 $\pm$ 0.0002 \\
-GCN-Spatial & 0.2499 $\pm$ 0.0484 & 0.0043 $\pm$ 0.0000 & \textbf{0.0050 $\pm$ 0.0000} & \textbf{0.0281 $\pm$ 0.0025} & 0.0979 $\pm$ 0.0258 & 0.4165 $\pm$ 0.0269 & \textbf{0.0086 $\pm$ 0.0004} & \textbf{0.0049 $\pm$ 0.0008} \\
-GCN-Spatiotemporal & 0.2721 $\pm$ 0.0547 & \textbf{0.0044 $\pm$ 0.0002} & 0.0049 $\pm$ 0.0001 & 0.0279 $\pm$ 0.0010 & 0.0957 $\pm$ 0.0247 & 0.4064 $\pm$ 0.0370 & \textbf{0.0086 $\pm$ 0.0003} & 0.0048 $\pm$ 0.0005 \\
+GCN-Lorenz & \textbf{0.6833 $\pm$ 0.0639} & 0.0041 $\pm$ 0.0002 & \textbf{0.0050 $\pm$ 0.0001} & 0.0265 $\pm$ 0.0007 & \textbf{0.1127 $\pm$ 0.0065} & \textbf{0.3513 $\pm$ 0.0211} & 0.0079 $\pm$ 0.0001 & 0.0044 $\pm$ 0.0002 \\
+GCN-Temporal & 0.6381 $\pm$ 0.0248 & 0.0043 $\pm$ 0.0001 & \textbf{0.0050 $\pm$ 0.0001} & 0.0270 $\pm$ 0.0005 & 0.0974 $\pm$ 0.0256 & 0.3908 $\pm$ 0.0107 & 0.0083 $\pm$ 0.0002 & 0.0046 $\pm$ 0.0002 \\
+GCN-Spatial & 0.6274 $\pm$ 0.0399 & 0.0043 $\pm$ 0.0000 & \textbf{0.0050 $\pm$ 0.0000} & \textbf{0.0281 $\pm$ 0.0025} & 0.0979 $\pm$ 0.0258 & 0.4165 $\pm$ 0.0269 & \textbf{0.0086 $\pm$ 0.0004} & \textbf{0.0049 $\pm$ 0.0008} \\
+GCN-Spatiotemporal & 0.6452 $\pm$ 0.0426 & \textbf{0.0044 $\pm$ 0.0002} & 0.0049 $\pm$ 0.0001 & 0.0279 $\pm$ 0.0010 & 0.0957 $\pm$ 0.0247 & 0.4064 $\pm$ 0.0370 & \textbf{0.0086 $\pm$ 0.0003} & 0.0048 $\pm$ 0.0005 \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -95,12 +95,12 @@ GCN-Spatiotemporal & 0.2721 $\pm$ 0.0547 & \textbf{0.0044 $\pm$ 0.0002} & 0.0049
 \label{tab:ablation_amsterdam_g5}
 \begin{tabular}{lcccccccc}
 \toprule
-Method & HV & EUM & Sen Welfare & Coverage Rate & Served Floor & Gini & Efficiency & Spatial SW (High) \\
+Method & HV (per-dim) & EUM & Sen Welfare & Coverage Rate & Served Floor & Gini & Efficiency & Spatial SW High Median \\
 \midrule
-GCN-Lorenz & 0.0127 $\pm$ 0.0015 & 0.0052 $\pm$ 0.0002 & 0.0070 $\pm$ 0.0008 & 0.0292 $\pm$ 0.0003 & 0.1227 $\pm$ 0.0116 & 0.5209 $\pm$ 0.0335 & 0.0141 $\pm$ 0.0005 & 0.0057 $\pm$ 0.0003 \\
-GCN-Temporal & \textbf{0.0163 $\pm$ 0.0031} & 0.0053 $\pm$ 0.0004 & \textbf{0.0077 $\pm$ 0.0008} & \textbf{0.0325 $\pm$ 0.0042} & \textbf{0.1252 $\pm$ 0.0062} & \textbf{0.5097 $\pm$ 0.0228} & 0.0153 $\pm$ 0.0019 & \textbf{0.0060 $\pm$ 0.0007} \\
-GCN-Spatial & 0.0141 $\pm$ 0.0064 & \textbf{0.0061 $\pm$ 0.0006} & 0.0064 $\pm$ 0.0015 & 0.0303 $\pm$ 0.0035 & 0.0991 $\pm$ 0.0218 & 0.5645 $\pm$ 0.0687 & 0.0155 $\pm$ 0.0024 & 0.0055 $\pm$ 0.0006 \\
-GCN-Spatiotemporal & 0.0133 $\pm$ 0.0025 & \textbf{0.0061 $\pm$ 0.0002} & 0.0064 $\pm$ 0.0012 & 0.0287 $\pm$ 0.0023 & 0.0670 $\pm$ 0.0183 & 0.5906 $\pm$ 0.0526 & \textbf{0.0159 $\pm$ 0.0026} & 0.0052 $\pm$ 0.0006 \\
+GCN-Lorenz & 0.4173 $\pm$ 0.0100 & 0.0052 $\pm$ 0.0002 & 0.0070 $\pm$ 0.0008 & 0.0292 $\pm$ 0.0003 & 0.1227 $\pm$ 0.0116 & 0.5209 $\pm$ 0.0335 & 0.0141 $\pm$ 0.0005 & 0.0057 $\pm$ 0.0003 \\
+GCN-Temporal & \textbf{0.4379 $\pm$ 0.0164} & 0.0053 $\pm$ 0.0004 & \textbf{0.0077 $\pm$ 0.0008} & \textbf{0.0325 $\pm$ 0.0042} & \textbf{0.1252 $\pm$ 0.0062} & \textbf{0.5097 $\pm$ 0.0228} & 0.0153 $\pm$ 0.0019 & \textbf{0.0060 $\pm$ 0.0007} \\
+GCN-Spatial & 0.4180 $\pm$ 0.0443 & \textbf{0.0061 $\pm$ 0.0006} & 0.0064 $\pm$ 0.0015 & 0.0303 $\pm$ 0.0035 & 0.0991 $\pm$ 0.0218 & 0.5645 $\pm$ 0.0687 & 0.0155 $\pm$ 0.0024 & 0.0055 $\pm$ 0.0006 \\
+GCN-Spatiotemporal & 0.4204 $\pm$ 0.0157 & \textbf{0.0061 $\pm$ 0.0002} & 0.0064 $\pm$ 0.0012 & 0.0287 $\pm$ 0.0023 & 0.0670 $\pm$ 0.0183 & 0.5906 $\pm$ 0.0526 & \textbf{0.0159 $\pm$ 0.0026} & 0.0052 $\pm$ 0.0006 \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -113,12 +113,12 @@ GCN-Spatiotemporal & 0.0133 $\pm$ 0.0025 & \textbf{0.0061 $\pm$ 0.0002} & 0.0064
 \label{tab:ablation_amsterdam_g7}
 \begin{tabular}{lcccccccc}
 \toprule
-Method & HV & EUM & Sen Welfare & Coverage Rate & Served Floor & Gini & Efficiency & Spatial SW (High) \\
+Method & HV (per-dim) & EUM & Sen Welfare & Coverage Rate & Served Floor & Gini & Efficiency & Spatial SW High Median \\
 \midrule
-GCN-Lorenz & \textbf{0.0017 $\pm$ 0.0003} & 0.0054 $\pm$ 0.0003 & \textbf{0.0113 $\pm$ 0.0010} & \textbf{0.0286 $\pm$ 0.0013} & \textbf{0.1155 $\pm$ 0.0021} & 0.5140 $\pm$ 0.0233 & \textbf{0.0244 $\pm$ 0.0018} & \textbf{0.0055 $\pm$ 0.0004} \\
-GCN-Temporal & 0.0015 $\pm$ 0.0002 & 0.0056 $\pm$ 0.0002 & 0.0102 $\pm$ 0.0018 & 0.0278 $\pm$ 0.0012 & 0.1149 $\pm$ 0.0007 & \textbf{0.4877 $\pm$ 0.0248} & 0.0222 $\pm$ 0.0036 & 0.0052 $\pm$ 0.0003 \\
-GCN-Spatial & 0.0012 $\pm$ 0.0005 & 0.0058 $\pm$ 0.0002 & 0.0073 $\pm$ 0.0013 & 0.0257 $\pm$ 0.0010 & 0.1102 $\pm$ 0.0061 & 0.5804 $\pm$ 0.0618 & 0.0180 $\pm$ 0.0019 & 0.0046 $\pm$ 0.0005 \\
-GCN-Spatiotemporal & 0.0006 $\pm$ 0.0002 & \textbf{0.0064 $\pm$ 0.0002} & 0.0069 $\pm$ 0.0013 & 0.0267 $\pm$ 0.0034 & 0.0995 $\pm$ 0.0248 & 0.5993 $\pm$ 0.0474 & 0.0181 $\pm$ 0.0018 & 0.0047 $\pm$ 0.0009 \\
+GCN-Lorenz & \textbf{0.4020 $\pm$ 0.0098} & 0.0054 $\pm$ 0.0003 & \textbf{0.0113 $\pm$ 0.0010} & \textbf{0.0286 $\pm$ 0.0013} & \textbf{0.1155 $\pm$ 0.0021} & 0.5140 $\pm$ 0.0233 & \textbf{0.0244 $\pm$ 0.0018} & \textbf{0.0055 $\pm$ 0.0004} \\
+GCN-Temporal & 0.3952 $\pm$ 0.0089 & 0.0056 $\pm$ 0.0002 & 0.0102 $\pm$ 0.0018 & 0.0278 $\pm$ 0.0012 & 0.1149 $\pm$ 0.0007 & \textbf{0.4877 $\pm$ 0.0248} & 0.0222 $\pm$ 0.0036 & 0.0052 $\pm$ 0.0003 \\
+GCN-Spatial & 0.3784 $\pm$ 0.0241 & 0.0058 $\pm$ 0.0002 & 0.0073 $\pm$ 0.0013 & 0.0257 $\pm$ 0.0010 & 0.1102 $\pm$ 0.0061 & 0.5804 $\pm$ 0.0618 & 0.0180 $\pm$ 0.0019 & 0.0046 $\pm$ 0.0005 \\
+GCN-Spatiotemporal & 0.3442 $\pm$ 0.0201 & \textbf{0.0064 $\pm$ 0.0002} & 0.0069 $\pm$ 0.0013 & 0.0267 $\pm$ 0.0034 & 0.0995 $\pm$ 0.0248 & 0.5993 $\pm$ 0.0474 & 0.0181 $\pm$ 0.0018 & 0.0047 $\pm$ 0.0009 \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -131,12 +131,12 @@ GCN-Spatiotemporal & 0.0006 $\pm$ 0.0002 & \textbf{0.0064 $\pm$ 0.0002} & 0.0069
 \label{tab:ablation_amsterdam_g10}
 \begin{tabular}{lcccccccc}
 \toprule
-Method & HV & EUM & Sen Welfare & Coverage Rate & Served Floor & Gini & Efficiency & Spatial SW (High) \\
+Method & HV (per-dim) & EUM & Sen Welfare & Coverage Rate & Served Floor & Gini & Efficiency & Spatial SW High Median \\
 \midrule
-GCN-Lorenz & \textbf{0.0000 $\pm$ 0.0000} & 0.0050 $\pm$ 0.0006 & 0.0081 $\pm$ 0.0016 & 0.0201 $\pm$ 0.0033 & 0.1077 $\pm$ 0.0088 & \textbf{0.5637 $\pm$ 0.0263} & 0.0201 $\pm$ 0.0051 & 0.0032 $\pm$ 0.0007 \\
-GCN-Temporal & \textbf{0.0000 $\pm$ 0.0000} & 0.0050 $\pm$ 0.0004 & \textbf{0.0096 $\pm$ 0.0019} & \textbf{0.0278 $\pm$ 0.0066} & 0.1122 $\pm$ 0.0028 & 0.5807 $\pm$ 0.0154 & 0.0235 $\pm$ 0.0040 & \textbf{0.0050 $\pm$ 0.0015} \\
-GCN-Spatial & \textbf{0.0000 $\pm$ 0.0000} & \textbf{0.0070 $\pm$ 0.0000} & 0.0071 $\pm$ 0.0000 & 0.0271 $\pm$ 0.0000 & \textbf{0.1222 $\pm$ 0.0000} & 0.7386 $\pm$ 0.0000 & \textbf{0.0280 $\pm$ 0.0000} & 0.0045 $\pm$ 0.0000 \\
-GCN-Spatiotemporal & -- & -- & -- & -- & -- & -- & -- & -- \\
+GCN-Lorenz & 0.3029 $\pm$ 0.0137 & 0.0050 $\pm$ 0.0006 & 0.0081 $\pm$ 0.0016 & 0.0201 $\pm$ 0.0033 & 0.1077 $\pm$ 0.0088 & \textbf{0.5637 $\pm$ 0.0263} & 0.0201 $\pm$ 0.0051 & 0.0032 $\pm$ 0.0007 \\
+GCN-Temporal & \textbf{0.3052 $\pm$ 0.0087} & 0.0050 $\pm$ 0.0004 & \textbf{0.0096 $\pm$ 0.0019} & 0.0278 $\pm$ 0.0066 & \textbf{0.1122 $\pm$ 0.0028} & 0.5807 $\pm$ 0.0154 & 0.0235 $\pm$ 0.0040 & \textbf{0.0050 $\pm$ 0.0015} \\
+GCN-Spatial & 0.2375 $\pm$ 0.0188 & 0.0064 $\pm$ 0.0005 & 0.0067 $\pm$ 0.0006 & 0.0272 $\pm$ 0.0020 & 0.0808 $\pm$ 0.0332 & 0.7372 $\pm$ 0.0173 & 0.0262 $\pm$ 0.0024 & 0.0044 $\pm$ 0.0005 \\
+GCN-Spatiotemporal & 0.2469 $\pm$ 0.0197 & \textbf{0.0067 $\pm$ 0.0002} & 0.0068 $\pm$ 0.0009 & \textbf{0.0284 $\pm$ 0.0027} & 0.0915 $\pm$ 0.0257 & 0.7086 $\pm$ 0.0463 & \textbf{0.0273 $\pm$ 0.0023} & 0.0046 $\pm$ 0.0007 \\
 \bottomrule
 \end{tabular}
 \end{table}
