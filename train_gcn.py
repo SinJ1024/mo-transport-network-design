@@ -45,6 +45,7 @@ def main(args):
         batch_size=args.batch_size,
         project_name=args.project_name,
         experiment_name=args.experiment_name,
+        wandb_entity=args.wandb_entity,
         log=not args.no_log,
         seed=args.seed,
         nr_layers=args.nr_layers,
@@ -118,6 +119,10 @@ if __name__ == "__main__":
     parser.add_argument('--nash_mode', default='pareto_sized', choices=['pareto_filter', 'pareto_sized'])
     parser.add_argument('--nash_top_k', default=None, type=int)
     parser.add_argument('--nash_shift', default=0.0, type=float)
+    #wandb logging targets
+    parser.add_argument('--project_name', default=None, type=str)
+    parser.add_argument('--experiment_name', default=None, type=str)
+    parser.add_argument('--wandb_entity', default=None, type=str)
 
     args = parser.parse_args()
     print(args)
@@ -142,10 +147,11 @@ if __name__ == "__main__":
         args.dominance_func, args.l2_func = get_nash_dominated, nash_l2
         args.fairness_params = args.fairness_params | {
             'mode': args.nash_mode,
-            'shift': args.nash_shift
+            'shift': args.nash_shift,
+            'criterion': 'nash'
         }
         if args.nash_top_k is not None:
-            fairness_params['top_k'] = args.nash_top_k
+            args.fairness_params['top_k'] = args.nash_top_k
 
     args.scheduler = None
     if args.scheduling_method != 'constant':
@@ -163,10 +169,8 @@ if __name__ == "__main__":
     if args.env == 'amsterdam':
         args.city_path = Path(f"./envs/mo-tndp/cities/amsterdam")
         args.gym_env = 'motndp_amsterdam-v0'
-        args.project_name = "RiDM"
         args.groups_file = f"price_groups_{args.nr_groups}.txt"
         args.ignore_existing_lines = True
-        args.experiment_name = "GCN-Amsterdam"
         args.scaling_factor = np.array([100] * args.nr_groups + [0.01])
         args.ref_point = np.array([0] * args.nr_groups)
         args.max_return=np.array([1] * args.nr_groups)
@@ -174,10 +178,8 @@ if __name__ == "__main__":
     elif args.env == 'xian':
         args.city_path = Path(f"./envs/mo-tndp/cities/xian")
         args.gym_env = 'motndp_xian-v0'
-        args.project_name = "RiDM"
         args.groups_file = f"price_groups_{args.nr_groups}.txt"
         args.ignore_existing_lines = True
-        args.experiment_name = "GCN-Xian"
         args.scaling_factor = np.array([100] * args.nr_groups + [0.01])
         args.ref_point = np.array([0] * args.nr_groups)
         args.max_return=np.array([1] * args.nr_groups)
