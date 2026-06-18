@@ -359,7 +359,7 @@ python train_lcn.py --env xian --nr_groups 3 --nr_stations 20 \
 
 ### 6.4 可视化工具
 
-项目提供 `visualize_results.py` 脚本，支持以下可视化方式：
+项目提供 `visualize.py` 脚本（统一支持 GCN 与 LCN，可用 `--algo` 自动识别），支持以下可视化方式：
 
 #### 方式一：从保存的模型生成图表
 
@@ -367,12 +367,12 @@ python train_lcn.py --env xian --nr_groups 3 --nr_stations 20 \
 
 ```bash
 # 单个模型
-python visualize_results.py --env dilemma --nr_stations 9 \
+python visualize.py --env dilemma --nr_stations 9 \
     --model_path results/lcn_amsterdam_20260428_00_28_22.687141/LCN_model_0.pt \
     --lcn_lambda 0.5 --distance_ref interpolate2
 
 # 对比多个模型（例如消融实验）
-python visualize_results.py --env dilemma --nr_stations 9 \
+python visualize.py --env dilemma --nr_stations 9 \
     --model_path results/run_baseline/LCN_model_0.pt \
                results/run_temporal/LCN_model_0.pt \
                results/run_full/LCN_model_0.pt \
@@ -380,7 +380,7 @@ python visualize_results.py --env dilemma --nr_stations 9 \
     --lcn_lambda 0.5 --distance_ref interpolate2
 
 # 保存图片到文件夹（不弹窗）
-python visualize_results.py --env xian --nr_groups 3 --nr_stations 20 \
+python visualize.py --env xian --nr_groups 3 --nr_stations 20 \
     --starting_loc_x 9 --starting_loc_y 19 \
     --model_path results/.../LCN_model_0.pt \
     --lcn_lambda 0.5 --distance_ref interpolate3 \
@@ -405,11 +405,11 @@ python visualize_results.py --env xian --nr_groups 3 --nr_stations 20 \
 3. 运行：
 
 ```bash
-python visualize_results.py --from_csv wandb_export.csv
-python visualize_results.py --from_csv wandb_export.csv --save_dir figures/
+python visualize.py --from_csv wandb_export.csv
+python visualize.py --from_csv wandb_export.csv --save_dir figures/
 ```
 
-会自动识别并分组绘制 Hypervolume、Loss、Gini、Sen Welfare、Lambda 曲线、Max-Min Floor、Spatial SW 等指标。
+会自动识别并分组绘制 Hypervolume、Loss、Gini、Sen Welfare、Lambda 曲线、Spatial SW、Served Floor、Demand Coverage、Price Equity 等指标。
 
 #### 方式三：直接使用 wandb 面板
 
@@ -472,7 +472,7 @@ if self.global_step >= (n_checkpoints + 1) * total_timesteps / 100:
 
 ```
 train_lcn.py                                    # 训练入口 + CLI 参数定义
-visualize_results.py                            # 可视化工具（Pareto 前沿、路线图等）
+visualize.py                            # 可视化工具（Pareto 前沿、路线图等）
 jobs/
   ablation_xian.sh                              # Xi'an 消融实验 SLURM 脚本
   ablation_amsterdam.sh                         # Amsterdam 消融实验 SLURM 脚本
