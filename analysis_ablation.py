@@ -40,7 +40,7 @@ import wandb
 PROJECT    = "jingyuan-sun03-tu-delft/cl_ablation"
 HIDDEN_DIM = 128
 GROUPS     = [3, 5, 7, 10]
-CONFIGS    = ["l0", "temporal", "spatial", "spatiotemporal"]
+CONFIGS    = ["l0", "temporal", "spatial", "spatiotemporal", "pcn", "ncn"]
 ENVS       = ["xian", "amsterdam"]
 
 CONFIG_LABELS = {
@@ -48,6 +48,8 @@ CONFIG_LABELS = {
     "temporal":       "GCN-Temporal",
     "spatial":        "GCN-Spatial",
     "spatiotemporal": "GCN-Spatiotemporal",
+    "pcn":            "PCN",
+    "ncn":            "NCN (Nash)",
 }
 
 PALETTE = {
@@ -55,6 +57,8 @@ PALETTE = {
     "temporal":       "#DD8452",
     "spatial":        "#55A868",
     "spatiotemporal": "#C44E52",
+    "pcn":            "#8172B3",
+    "ncn":            "#937860",
 }
 
 # Final-step metrics for table and bar charts
@@ -62,20 +66,20 @@ PALETTE = {
 METRICS = {
     "eval/hypervolume_pdim":       ("HV (per-dim)",  True),
     "eval/eum":                    ("EUM",            True),
-    "eval/sen_welfare_median":     ("Sen Welfare",    True),
-    "eval/demand_coverage_median": ("Coverage Rate",  True),
-    "eval/served_floor_median":    ("Served Floor",   True),
-    "eval/gini_median":            ("Gini",           False),
-    "eval/efficiency_median":      ("Efficiency",     True),
-    "eval/spatial_sw_high_median": ("Spatial SW High Median", True),
+    "eval/sen_welfare_max":        ("Sen Welfare",    True),
+    "eval/demand_coverage_max":    ("Coverage Rate",  True),
+    "eval/served_floor_max":       ("Served Floor",   True),
+    "eval/gini_min":               ("Gini",           False),  # min = best front point (lower is better)
+    "eval/efficiency_max":         ("Efficiency",     True),
+    "eval/spatial_sw_high_median": ("Spatial SW High Median", True),  # no _max key logged; left as median
 }
 
 # Metrics shown on training curves
 CURVE_METRICS = {
     "eval/hypervolume_pdim":       "HV (per-dim)",
     "eval/eum":                    "EUM",
-    "eval/sen_welfare_median":     "Sen Welfare",
-    "eval/demand_coverage_median": "Coverage Rate",
+    "eval/sen_welfare_max":        "Sen Welfare",
+    "eval/demand_coverage_max":    "Coverage Rate",
     "eval/spatial_sw_high_median": "Spatial SW High Median",
 }
 CURVE_SMOOTH = 5   # rolling window (on ~30 eval points; 5 ≈ light smoothing)
@@ -85,20 +89,41 @@ SAVEDIR.mkdir(parents=True, exist_ok=True)
 
 # ── Data loading ──────────────────────────────────────────────────────────────
 
-def parse_algo(algo: str):
-    """'GCN-xian-g5-l0' → (env, groups, config)"""
-    m = re.match(r"GCN-(\w+)-g(\d+)-(.+)$", algo)
-    if not m:
+def classify_run(cfg: dict):
+    """Map a run's wandb config to (env, groups, method); method in CONFIGS or None.
+
+    Uses config fields rather than the run name, so it also handles the PCN and NCN
+    baselines (which are not named GCN-<env>-g<G>-<config>). PCN is detected by name,
+    NCN by criterion=='nash', and the four GCN schemes by spatial_alpha / schedule.
+    """
+    env = cfg.get("env")
+    groups = cfg.get("nr_groups")
+    if env is None or groups is None:
         return None, None, None
-    return m.group(1), int(m.group(2)), m.group(3)
+    name = str(cfg.get("experiment_name") or cfg.get("algo") or "")
+    if name.upper().startswith("PCN"):
+        return env, int(groups), "pcn"
+    if cfg.get("criterion") == "nash":
+        return env, int(groups), "ncn"
+    if cfg.get("criterion", "lorenz") == "lorenz":
+        spatial = float(cfg.get("spatial_alpha") or 0) > 0
+        sched = (cfg.get("lambda_schedule") or cfg.get("scheduling_method") or "constant") != "constant"
+        return env, int(groups), {
+            (False, False): "l0", (False, True): "temporal",
+            (True, False): "spatial", (True, True): "spatiotemporal",
+        }[(spatial, sched)]
+    return None, None, None
 
 
 def fetch_summary(envs_filter=None) -> pd.DataFrame:
     api = wandb.Api()
+    # NOTE: only runs with this hidden_dim and state are pulled. If the PCN/NCN
+    # baselines used a different hidden_dim or live in another project, adjust
+    # PROJECT / drop the hidden_dim filter so they are included.
     runs = api.runs(PROJECT, filters={"config.hidden_dim": HIDDEN_DIM, "state": "finished"})
     rows = []
     for r in runs:
-        env, groups, config = parse_algo(r.config.get("algo", ""))
+        env, groups, config = classify_run(r.config)
         if env is None:
             continue
         if envs_filter and env not in envs_filter:
@@ -249,8 +274,9 @@ def plot_bar_per_metric(df: pd.DataFrame, env: str):
         tmp = pd.DataFrame(records)
 
         fig, ax = plt.subplots(figsize=(7, 3.8))
-        n_configs = len(CONFIGS)
-        x = np.arange(n_configs)
+        # only methods that have data for this metric (drops PCN/NCN on cell-level metrics)
+        present_cfgs = [c for c in CONFIGS if (tmp["config"] == c).any()]
+        x = np.arange(len(present_cfgs))
         width = 0.18
         present_groups = sorted(tmp["groups"].unique())
         offsets = np.linspace(-(len(present_groups) - 1) / 2,
@@ -260,15 +286,15 @@ def plot_bar_per_metric(df: pd.DataFrame, env: str):
         for off, g in zip(offsets, present_groups):
             row = tmp[tmp["groups"] == g]
             means = [row[row["config"] == c]["mean"].values[0]
-                     if len(row[row["config"] == c]) else np.nan for c in CONFIGS]
+                     if len(row[row["config"] == c]) else np.nan for c in present_cfgs]
             stds  = [row[row["config"] == c]["std"].values[0]
-                     if len(row[row["config"] == c]) else 0  for c in CONFIGS]
+                     if len(row[row["config"] == c]) else 0  for c in present_cfgs]
             bars = ax.bar(x + off, means, width, yerr=stds,
                           capsize=3, label=f"G={g}", alpha=0.85,
                           error_kw={"linewidth": 0.8})
 
         ax.set_xticks(x)
-        ax.set_xticklabels([CONFIG_LABELS[c] for c in CONFIGS])
+        ax.set_xticklabels([CONFIG_LABELS[c] for c in present_cfgs])
         ax.set_ylabel(label)
         ax.set_title(f"{env.capitalize()} — {label}")
         ax.legend(title="Nr. groups", frameon=False, ncol=len(present_groups))
@@ -309,26 +335,30 @@ def plot_bar_combined(df: pd.DataFrame, env: str):
 
     for idx, (metric, label) in enumerate(active):
         ax = axes[idx // ncols][idx % ncols]
+        # only methods that actually have data for THIS metric: drops e.g. PCN/NCN
+        # from the cell-level panels (served floor, coverage, spatial SW) automatically
+        present_cfgs = [c for c in CONFIGS if sub[sub["config"] == c][metric].notna().any()]
+        xx = np.arange(len(present_cfgs))
         records = []
         for g in present_groups:
-            for cfg in CONFIGS:
+            for cfg in present_cfgs:
                 vals = sub[(sub["groups"] == g) & (sub["config"] == cfg)][metric].dropna()
                 if len(vals):
                     records.append(dict(groups=g, config=cfg,
                                         mean=vals.mean(), std=vals.std(ddof=0)))
         tmp = pd.DataFrame(records)
         for off, g in zip(offsets, present_groups):
-            row = tmp[tmp["groups"] == g]
+            row = tmp[tmp["groups"] == g] if not tmp.empty else tmp
             means = [row[row["config"] == c]["mean"].values[0]
-                     if len(row[row["config"] == c]) else np.nan for c in CONFIGS]
+                     if (not row.empty and len(row[row["config"] == c])) else np.nan for c in present_cfgs]
             stds  = [row[row["config"] == c]["std"].values[0]
-                     if len(row[row["config"] == c]) else 0  for c in CONFIGS]
-            ax.bar(x + off, means, width, yerr=stds, capsize=3,
+                     if (not row.empty and len(row[row["config"] == c])) else 0  for c in present_cfgs]
+            ax.bar(xx + off, means, width, yerr=stds, capsize=3,
                    color=group_colors[g], label=f"G={g}", alpha=0.85,
                    error_kw={"linewidth": 0.8})
         ax.set_title(label, fontsize=10)
-        ax.set_xticks(x)
-        ax.set_xticklabels([CONFIG_LABELS[c] for c in CONFIGS], fontsize=8, rotation=15, ha="right")
+        ax.set_xticks(xx)
+        ax.set_xticklabels([CONFIG_LABELS[c] for c in present_cfgs], fontsize=8, rotation=15, ha="right")
 
     # hide unused axes
     for idx in range(len(active), nrows * ncols):
