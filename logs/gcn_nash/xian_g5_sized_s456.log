@@ -1,0 +1,227 @@
+/data/Projects/Assignment for DSAIT/ResearchIDM/mo-transport-network-design/.venv/lib/python3.13/site-packages/pygame/pkgdata.py:25: UserWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html. The pkg_resources package is slated for removal as early as 2025-11-30. Refrain from using this package or pin to Setuptools<81.
+  from pkg_resources import resource_stream, resource_exists
+wandb: [wandb.login()] Loaded credentials for https://api.wandb.ai from /home/johnario/.netrc.
+wandb: Currently logged in as: johnario (johnario-tu-delft) to https://api.wandb.ai. Use `wandb login --relogin` to force relogin
+wandb: setting up run y6136d5k
+wandb: Tracking run with wandb version 0.27.2
+wandb: Run data is saved locally in /data/Projects/Assignment for DSAIT/ResearchIDM/mo-transport-network-design/wandb/run-20260615_141328-y6136d5k
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run motndp_xian-v0__GCN-xian-sized__456__1781525607
+wandb: ⭐️ View project at https://wandb.ai/johnario-tu-delft/cl_ablation
+wandb: 🚀 View run at https://wandb.ai/johnario-tu-delft/cl_ablation/runs/y6136d5k
+/data/Projects/Assignment for DSAIT/ResearchIDM/mo-transport-network-design/morl-baselines/morl_baselines/multi_policy/gcn/gcn.py:151: UserWarning: Creating a tensor from a list of numpy.ndarrays is extremely slow. Please consider converting the list to a single numpy.ndarray with numpy.array() before converting to a tensor. (Triggered internally at /pytorch/torch/csrc/utils/tensor_new.cpp:253.)
+  th.tensor(obs).to(self.device),
+wandb: WARNING Artifact "run-y6136d5k-evalfront-x65fTA" already exists with the same content. No new version will be created.
+wandb: WARNING Artifact "run-y6136d5k-evalfront-x65fTA" already exists with the same content. No new version will be created.
+wandb: WARNING Artifact "run-y6136d5k-evalfront-x65fTA" already exists with the same content. No new version will be created.
+Namespace(env='xian', nr_groups=5, starting_loc_x=9, starting_loc_y=9, nr_stations=20, lr=0.01, batch_size=256, num_er_episodes=100, num_step_episodes=10, num_model_updates=5, num_policies=10, max_buffer_size=100, nr_layers=1, hidden_dim=64, timesteps=30000, no_log=False, seed=456, cd_threshold=0.2, distance_ref='nondominated', lcn_lambda=None, scheduling_method='constant', schedule_start=1.0, schedule_end=None, scheduler_warmup_fraction=0.0, scheduler_freeze_fraction=0.1, spatial_alpha=0.0, include_demand_context=False, criterion='nash', nash_mode='pareto_sized', nash_top_k=None, nash_shift=0.0, project_name='cl_ablation', experiment_name='GCN-xian-sized', wandb_entity='johnario-tu-delft')
+step 1965 	 return [0.00103732 0.00126409 0.00262448 0.00134078 0.0015071 ], ([0.00131282 0.00094886 0.00313776 0.0017092  0.00189205]) 	 loss 2.005E+00 	 horizons 18.2
+step 2155 	 return [0.00069493 0.00235592 0.00552631 0.00318733 0.00492418], ([0.00109586 0.00195014 0.00368288 0.00176321 0.00318179]) 	 loss 1.912E+00 	 horizons 19.0
+step 2333 	 return [0.00166491 0.00222706 0.00108121 0.00287248 0.00249094], ([0.00219607 0.00165003 0.00199209 0.00289945 0.00245746]) 	 loss 1.766E+00 	 horizons 17.8
+step 2515 	 return [0.00158627 0.00310469 0.00242587 0.00132437 0.00040991], ([0.00262631 0.00335775 0.00398894 0.00104966 0.00061987]) 	 loss 1.560E+00 	 horizons 18.2
+step 2705 	 return [0.00490631 0.00505705 0.00469033 0.00287818 0.00220411], ([0.00339843 0.00357164 0.00381102 0.00213557 0.00241264]) 	 loss 1.357E+00 	 horizons 19.0
+step 2886 	 return [0.00142204 0.00366034 0.00162861 0.00249361 0.00233269], ([0.00266767 0.00248897 0.00242419 0.002054   0.00210346]) 	 loss 1.120E+00 	 horizons 18.1
+step 3068 	 return [0.00083546 0.0013324  0.00179182 0.00140958 0.00136052], ([0.00104684 0.00145961 0.00210334 0.00146205 0.00215722]) 	 loss 1.048E+00 	 horizons 18.2
+step 3258 	 return [0.00240021 0.00350844 0.00252087 0.00231849 0.00185182], ([0.0023265  0.00200328 0.0031592  0.00164229 0.00190777]) 	 loss 9.341E-01 	 horizons 19.0
+step 3448 	 return [0.00409245 0.00480863 0.00346801 0.00173799 0.00157508], ([0.00275127 0.00285039 0.00191514 0.00207177 0.00212526]) 	 loss 8.907E-01 	 horizons 19.0
+step 3638 	 return [0.00148986 0.00324082 0.00270217 0.00335013 0.00248259], ([0.00237158 0.00142791 0.00412267 0.00192043 0.00183674]) 	 loss 8.567E-01 	 horizons 19.0
+step 3828 	 return [0.00585262 0.00446876 0.00280067 0.00185747 0.00146075], ([0.002355   0.00216243 0.00221687 0.00217897 0.00172652]) 	 loss 7.866E-01 	 horizons 19.0
+step 4018 	 return [0.00275981 0.00425463 0.00468671 0.00256665 0.00148811], ([0.00201204 0.00167016 0.00271008 0.00213268 0.00136142]) 	 loss 7.674E-01 	 horizons 19.0
+step 4208 	 return [0.0027467  0.00314619 0.00186251 0.00172318 0.00205778], ([0.00261212 0.00191474 0.00126087 0.00125942 0.00176868]) 	 loss 7.535E-01 	 horizons 19.0
+step 4398 	 return [0.0013815  0.00418084 0.00489191 0.00229293 0.00170807], ([0.00155748 0.00152838 0.00268031 0.00132678 0.00111209]) 	 loss 7.761E-01 	 horizons 19.0
+step 4588 	 return [0.00235202 0.00411681 0.00365491 0.00186211 0.00180924], ([0.00211947 0.00110097 0.00343893 0.0014969  0.00162237]) 	 loss 7.559E-01 	 horizons 19.0
+step 4778 	 return [0.00271227 0.00532752 0.00287393 0.0022738  0.00120849], ([0.00270781 0.00190826 0.00144403 0.00190241 0.00121035]) 	 loss 7.218E-01 	 horizons 19.0
+step 4968 	 return [0.00368718 0.00521808 0.00344615 0.00188412 0.00145563], ([0.0030745  0.00161519 0.00231154 0.00145687 0.00129863]) 	 loss 7.152E-01 	 horizons 19.0
+step 5158 	 return [0.00580843 0.00393197 0.00259689 0.00244185 0.00241521], ([0.00185814 0.00104809 0.00233096 0.00268086 0.0020434 ]) 	 loss 6.046E-01 	 horizons 19.0
+step 5348 	 return [0.00413917 0.00526839 0.00346963 0.00159654 0.00118535], ([0.00242617 0.0025299  0.00212991 0.00094242 0.00094124]) 	 loss 6.524E-01 	 horizons 19.0
+step 5538 	 return [0.0069794  0.00423704 0.00275549 0.00057416 0.00039007], ([0.00135691 0.00053091 0.00080128 0.00036067 0.00030558]) 	 loss 6.724E-01 	 horizons 19.0
+step 5728 	 return [0.00483283 0.00494762 0.00280302 0.00156073 0.00103816], ([0.0029813  0.00171623 0.0010457  0.00120154 0.00191887]) 	 loss 6.458E-01 	 horizons 19.0
+step 5918 	 return [0.0030485  0.00686872 0.0042304  0.00227466 0.00162405], ([0.00184837 0.00270627 0.00264715 0.00182668 0.00147208]) 	 loss 6.166E-01 	 horizons 19.0
+step 6108 	 return [0.00422093 0.00578125 0.00417401 0.00276967 0.00157116], ([0.00277007 0.00195699 0.00285099 0.00153065 0.00182885]) 	 loss 6.889E-01 	 horizons 19.0
+step 6298 	 return [0.00190087 0.00441117 0.00627437 0.0026737  0.00329708], ([0.00141582 0.00240484 0.00185896 0.00219521 0.00186652]) 	 loss 6.542E-01 	 horizons 19.0
+step 6488 	 return [0.00280359 0.00556262 0.00425354 0.0021723  0.00317439], ([0.00229433 0.00250206 0.00330317 0.00124144 0.00172098]) 	 loss 6.738E-01 	 horizons 19.0
+step 6678 	 return [0.00265268 0.00475059 0.00586639 0.00179805 0.0031325 ], ([0.00152112 0.00072667 0.00257523 0.00206527 0.00212757]) 	 loss 7.042E-01 	 horizons 19.0
+step 6868 	 return [0.00354212 0.00554426 0.00346372 0.0024305  0.00181872], ([0.00176506 0.00228524 0.00194494 0.00196291 0.00132692]) 	 loss 6.785E-01 	 horizons 19.0
+step 7058 	 return [0.00560555 0.00473    0.00301216 0.00158627 0.00118671], ([0.00266032 0.00126441 0.00239712 0.00201267 0.00156267]) 	 loss 6.707E-01 	 horizons 19.0
+step 7248 	 return [0.00285808 0.00629497 0.0043594  0.00259274 0.00228209], ([0.00177803 0.00194389 0.00236358 0.00187164 0.00169291]) 	 loss 6.979E-01 	 horizons 19.0
+step 7438 	 return [0.0021079  0.00608901 0.00660926 0.00409366 0.00428296], ([0.00081976 0.00165115 0.00290585 0.00253788 0.00261415]) 	 loss 7.129E-01 	 horizons 19.0
+step 7628 	 return [0.00305249 0.0078063  0.00536045 0.00222617 0.0031652 ], ([0.00174709 0.0022723  0.00291895 0.00166419 0.00130969]) 	 loss 6.719E-01 	 horizons 19.0
+step 7818 	 return [0.00230987 0.00518216 0.00725954 0.00226007 0.0037999 ], ([0.00030999 0.00116977 0.00282224 0.00093753 0.00111869]) 	 loss 6.955E-01 	 horizons 19.0
+step 8008 	 return [0.00211914 0.00495253 0.00590947 0.00189169 0.00265017], ([0.00035734 0.00138053 0.00175773 0.00095456 0.00133688]) 	 loss 6.749E-01 	 horizons 19.0
+step 8198 	 return [0.00318494 0.00852295 0.00713295 0.00282646 0.0033222 ], ([0.00177765 0.00192973 0.00341599 0.00121369 0.00193256]) 	 loss 7.255E-01 	 horizons 19.0
+step 8388 	 return [0.00362473 0.0082694  0.00452698 0.0028491  0.00181892], ([0.00206816 0.00281751 0.00247318 0.00201278 0.00160164]) 	 loss 7.033E-01 	 horizons 19.0
+step 8578 	 return [0.00250196 0.00597824 0.00802078 0.00348705 0.00376208], ([0.00051665 0.00155831 0.00249601 0.00235502 0.00135159]) 	 loss 6.720E-01 	 horizons 19.0
+step 8768 	 return [0.00237653 0.00582858 0.00750312 0.00195158 0.00417928], ([0.00041867 0.00132756 0.00245163 0.00147139 0.00192703]) 	 loss 7.587E-01 	 horizons 19.0
+step 8958 	 return [0.00293251 0.00579724 0.00786076 0.00266912 0.00405192], ([0.00190859 0.00179509 0.0034562  0.00207891 0.00224568]) 	 loss 7.233E-01 	 horizons 19.0
+step 9148 	 return [0.00262377 0.00621905 0.00746875 0.00356282 0.00312175], ([0.00014756 0.00118611 0.00186906 0.00222854 0.0013987 ]) 	 loss 7.057E-01 	 horizons 19.0
+step 9338 	 return [0.00311589 0.0075058  0.00674896 0.00268474 0.00443017], ([0.00129499 0.00231399 0.00371766 0.00156643 0.00180437]) 	 loss 6.486E-01 	 horizons 19.0
+step 9528 	 return [0.00263803 0.00527035 0.00645366 0.00307979 0.00313237], ([0.00117249 0.00186257 0.00291866 0.00139618 0.00172146]) 	 loss 6.560E-01 	 horizons 19.0
+step 9718 	 return [0.00281755 0.00483547 0.00690031 0.00370526 0.00426158], ([0.00062509 0.00109044 0.00306501 0.00310488 0.00127366]) 	 loss 6.359E-01 	 horizons 19.0
+step 9908 	 return [0.00314085 0.00931631 0.00936086 0.00124639 0.00387426], ([0.00070496 0.00149582 0.00340547 0.00110353 0.00173719]) 	 loss 6.020E-01 	 horizons 19.0
+step 10098 	 return [0.00289975 0.00651634 0.00834352 0.00358379 0.00443653], ([0.00056535 0.00202982 0.00295478 0.00208481 0.00163061]) 	 loss 5.730E-01 	 horizons 19.0
+step 10288 	 return [0.00326417 0.00617389 0.00767439 0.00400761 0.00525416], ([0.00151333 0.00147789 0.0030411  0.00257055 0.00235653]) 	 loss 5.853E-01 	 horizons 19.0wandb: WARNING Artifact "run-y6136d5k-evalfront-x65fTA" already exists with the same content. No new version will be created.
+wandb: WARNING Artifact "run-y6136d5k-evalfront-x65fTA" already exists with the same content. No new version will be created.
+wandb: WARNING Artifact "run-y6136d5k-evalfront-x65fTA" already exists with the same content. No new version will be created.
+wandb: WARNING Artifact "run-y6136d5k-evalfront-x65fTA" already exists with the same content. No new version will be created.
+
+step 10478 	 return [0.00268475 0.00670824 0.00985949 0.00345142 0.00494726], ([0.00021605 0.00122498 0.0012548  0.00342468 0.00215209]) 	 loss 5.931E-01 	 horizons 19.0
+step 10668 	 return [0.00311386 0.00608612 0.0086069  0.00417154 0.00557141], ([0.00113037 0.00119218 0.00291719 0.00243179 0.00145316]) 	 loss 5.639E-01 	 horizons 19.0
+step 10858 	 return [0.00302525 0.00811457 0.00938549 0.00396699 0.00453366], ([0.00038584 0.00203525 0.0027863  0.00263768 0.00103987]) 	 loss 5.875E-01 	 horizons 19.0
+step 11048 	 return [0.0027491  0.00657368 0.00911084 0.00292482 0.00468159], ([0.00014215 0.00151219 0.00191146 0.00305744 0.00136119]) 	 loss 5.616E-01 	 horizons 19.0
+step 11238 	 return [0.00280124 0.00649538 0.01021675 0.00293067 0.00573341], ([0.00046513 0.00133866 0.00198353 0.00174358 0.0019522 ]) 	 loss 5.328E-01 	 horizons 19.0
+step 11428 	 return [0.00264767 0.00513842 0.00961804 0.00535461 0.00541105], ([0.0010122  0.00113885 0.00171287 0.00253443 0.00220137]) 	 loss 5.332E-01 	 horizons 19.0
+step 11618 	 return [0.00300593 0.00890814 0.00981131 0.00345897 0.00473454], ([0.00058332 0.00116926 0.00179498 0.00260974 0.00088775]) 	 loss 5.091E-01 	 horizons 19.0
+step 11808 	 return [0.00334683 0.00840318 0.00987323 0.00211949 0.00498779], ([0.00081299 0.00160445 0.00297838 0.00137365 0.00178331]) 	 loss 5.153E-01 	 horizons 19.0
+step 11998 	 return [0.00284062 0.00717269 0.00990056 0.00436654 0.00574383], ([0.00056883 0.00166145 0.00127526 0.0030664  0.00216793]) 	 loss 4.748E-01 	 horizons 19.0
+step 12188 	 return [0.00314932 0.00843297 0.01096273 0.0035543  0.00586096], ([0.00076777 0.00129355 0.00142187 0.00250862 0.00180245]) 	 loss 5.069E-01 	 horizons 19.0
+step 12378 	 return [0.00344446 0.00554189 0.00682692 0.00570632 0.00567243], ([0.00134918 0.0011021  0.00327345 0.00321004 0.0023178 ]) 	 loss 4.873E-01 	 horizons 19.0
+step 12568 	 return [0.00311216 0.00968866 0.01052426 0.00350004 0.00566141], ([0.00053014 0.00099756 0.00177285 0.00243685 0.00140663]) 	 loss 4.743E-01 	 horizons 19.0
+step 12758 	 return [0.00317239 0.0091387  0.01035661 0.00396145 0.00555057], ([0.00074833 0.00114374 0.00132534 0.00282922 0.00164583]) 	 loss 3.995E-01 	 horizons 19.0
+step 12948 	 return [0.00307618 0.00691266 0.01039116 0.00519247 0.00534988], ([0.00052386 0.00111094 0.00182312 0.00274071 0.00168339]) 	 loss 4.081E-01 	 horizons 19.0
+step 13138 	 return [0.00273089 0.0057441  0.01027585 0.00686186 0.00593351], ([0.00019935 0.00103684 0.00154625 0.00250235 0.00112094]) 	 loss 4.016E-01 	 horizons 19.0
+step 13328 	 return [0.00353574 0.00664985 0.00970693 0.00604094 0.00516282], ([0.00088169 0.00158006 0.00262607 0.00384594 0.00215205]) 	 loss 3.689E-01 	 horizons 19.0
+step 13518 	 return [0.00319684 0.0091407  0.01037675 0.00435374 0.00640745], ([0.00047288 0.00138448 0.00198591 0.003278   0.00140965]) 	 loss 3.629E-01 	 horizons 19.0
+step 13708 	 return [0.00315242 0.00645812 0.01070061 0.00661184 0.00609257], ([0.00066237 0.00180445 0.00201058 0.00313742 0.00171817]) 	 loss 3.348E-01 	 horizons 19.0
+step 13898 	 return [0.00353288 0.00588382 0.0115941  0.00757175 0.0051961 ], ([0.00068748 0.00108616 0.00171027 0.00312653 0.00091819]) 	 loss 3.273E-01 	 horizons 19.0
+step 14088 	 return [0.00299137 0.0070349  0.00956476 0.00540217 0.00721215], ([0.00018531 0.00114661 0.00222373 0.0029497  0.00143096]) 	 loss 3.369E-01 	 horizons 19.0
+step 14278 	 return [0.00315559 0.00530503 0.01022591 0.00909489 0.00545615], ([0.00063598 0.00078258 0.00215629 0.00191233 0.00156227]) 	 loss 2.941E-01 	 horizons 19.0
+step 14468 	 return [0.00325453 0.0058839  0.01053215 0.0087836  0.00492327], ([0.00042876 0.00083964 0.00221352 0.00193089 0.0009801 ]) 	 loss 2.818E-01 	 horizons 19.0
+step 14658 	 return [0.00362391 0.00641632 0.01146967 0.00780251 0.00506314], ([0.00070333 0.00176975 0.00182986 0.00316019 0.00159304]) 	 loss 2.902E-01 	 horizons 19.0
+step 14848 	 return [0.00304489 0.00632309 0.01031647 0.00733635 0.00676489], ([0.00014498 0.00063538 0.00145564 0.00293195 0.00176498]) 	 loss 2.891E-01 	 horizons 19.0
+step 15038 	 return [0.0031377  0.00600495 0.00987448 0.008564   0.00594182], ([0.00031159 0.0005833  0.00106857 0.00163389 0.00114129]) 	 loss 2.471E-01 	 horizons 19.0
+step 15228 	 return [0.00380112 0.00798458 0.01108294 0.00677257 0.00540511], ([0.00075724 0.00126371 0.00114321 0.00293914 0.00191105]) 	 loss 2.503E-01 	 horizons 19.0
+step 15418 	 return [0.00413066 0.00571499 0.01028072 0.00869537 0.00446412], ([0.0014123  0.00148077 0.00342592 0.00335422 0.00134806]) 	 loss 2.498E-01 	 horizons 19.0
+step 15608 	 return [0.00366763 0.00637521 0.01061019 0.00976032 0.00510033], ([0.000718   0.00120828 0.00239618 0.00094338 0.00076763]) 	 loss 2.189E-01 	 horizons 19.0
+step 15798 	 return [0.00391935 0.00627115 0.01198358 0.00920964 0.00487318], ([0.00085621 0.00151256 0.00185118 0.00268096 0.00075168]) 	 loss 2.045E-01 	 horizons 19.0
+step 15988 	 return [0.00353644 0.00666889 0.010079   0.00901105 0.00546028], ([0.00074204 0.00122757 0.00238151 0.00181564 0.00072314]) 	 loss 2.034E-01 	 horizons 19.0
+step 16178 	 return [0.0038952  0.00666773 0.01144877 0.00946854 0.00551385], ([0.00081353 0.00137589 0.0018232  0.00240917 0.00163015]) 	 loss 1.719E-01 	 horizons 19.0
+step 16368 	 return [0.00408376 0.00608773 0.01227299 0.00926728 0.00463949], ([0.00086234 0.00110131 0.00103881 0.00210113 0.00055198]) 	 loss 1.780E-01 	 horizons 19.0
+step 16558 	 return [0.0043312  0.00581496 0.01247693 0.01027007 0.00487495], ([0.00060383 0.00060579 0.00072879 0.00040479 0.00086928]) 	 loss 1.752E-01 	 horizons 19.0
+step 16748 	 return [0.0040805  0.0064101  0.01185125 0.00932645 0.00463498], ([0.00068773 0.0008771  0.00130721 0.00255394 0.00093071]) 	 loss 2.158E-01 	 horizons 19.0
+step 16938 	 return [0.00422507 0.00603964 0.01201339 0.00924231 0.00508263], ([0.00061618 0.00101674 0.00130437 0.00296345 0.00206677]) 	 loss 1.736E-01 	 horizons 19.0
+step 17128 	 return [0.00439339 0.005374   0.01277601 0.01001372 0.00452948], ([0.00042803 0.00054307 0.00052709 0.00167629 0.00019083]) 	 loss 1.509E-01 	 horizons 19.0
+step 17318 	 return [0.00423924 0.00730384 0.01121358 0.0091001  0.00472194], ([0.00061459 0.00135005 0.00093554 0.00243327 0.00179087]) 	 loss 1.837E-01 	 horizons 19.0
+step 17508 	 return [0.00407958 0.00553062 0.01220825 0.00908839 0.00499114], ([0.00072633 0.0010934  0.00127357 0.00221746 0.00078639]) 	 loss 1.700E-01 	 horizons 19.0
+step 17698 	 return [0.00449806 0.00545614 0.01271951 0.01048413 0.00455796], ([4.6081550e-04 4.0611307e-04 5.2555930e-04 8.7050983e-05 2.8636876e-05]) 	 loss 1.581E-01 	 horizons 19.0
+step 17888 	 return [0.00493255 0.00511199 0.01161985 0.00940584 0.00406454], ([0.00094251 0.0008283  0.00334375 0.00301541 0.00108863]) 	 loss 1.451E-01 	 horizons 19.0
+step 18078 	 return [0.00414817 0.00596752 0.01186122 0.00973236 0.00454991], ([0.0007985  0.00106437 0.00140946 0.0019289  0.00070933]) 	 loss 1.391E-01 	 horizons 19.0
+step 18268 	 return [0.00461937 0.00530625 0.01293571 0.01048698 0.00451128], ([1.0423958e-04 4.4345789e-04 1.7040945e-04 7.6415177e-05 1.6120312e-04]) 	 loss 1.327E-01 	 horizons 19.0
+step 18458 	 return [0.0045611  0.00517728 0.01282802 0.01045011 0.00448231], ([0.00014538 0.00052033 0.00020753 0.00011294 0.0001757 ]) 	 loss 1.117E-01 	 horizons 19.0
+step 18648 	 return [0.00464344 0.00540919 0.01287325 0.01051021 0.00456705], ([5.8707243e-05 1.6726683e-04 1.0890902e-04 1.2753207e-05 7.2070752e-06]) 	 loss 8.704E-02 	 horizons 19.0
+step 18838 	 return [0.00435092 0.00548805 0.012916   0.00968124 0.00461809], ([6.4836995e-04 2.6665878e-04 1.6933543e-04 1.6741364e-03 9.4648749e-05]) 	 loss 8.863E-02 	 horizons 19.0
+step 19028 	 return [0.00449235 0.00579737 0.01249158 0.00970084 0.00499234], ([0.00047727 0.00133178 0.00107013 0.0024287  0.00126899]) 	 loss 7.425E-02 	 horizons 19.0
+step 19218 	 return [0.00468104 0.0055791  0.01301817 0.0105223  0.00456571], ([5.2855175e-05 2.7501595e-04 1.8418468e-04 1.4643991e-05 7.2969920e-06]) 	 loss 7.766E-02 	 horizons 19.0
+step 19408 	 return [0.00436921 0.00627123 0.01271061 0.00985032 0.00491839], ([0.00066289 0.00156722 0.00062256 0.00135949 0.00069818]) 	 loss 7.507E-02 	 horizons 19.0wandb: WARNING Artifact "run-y6136d5k-evalfront-x65fTA" already exists with the same content. No new version will be created.
+wandb: WARNING Artifact "run-y6136d5k-evalfront-x65fTA" already exists with the same content. No new version will be created.
+wandb: WARNING Artifact "run-y6136d5k-evalfront-x65fTA" already exists with the same content. No new version will be created.
+wandb: WARNING Artifact "run-y6136d5k-evalfront-x65fTA" already exists with the same content. No new version will be created.
+wandb: WARNING Artifact "run-y6136d5k-evalfront-x65fTA" already exists with the same content. No new version will be created.
+wandb: WARNING Artifact "run-y6136d5k-evalfront-x65fTA" already exists with the same content. No new version will be created.
+wandb: WARNING Artifact "run-y6136d5k-evalfront-x65fTA" already exists with the same content. No new version will be created.
+wandb: WARNING Artifact "run-y6136d5k-evalfront-x65fTA" already exists with the same content. No new version will be created.
+wandb: WARNING Artifact "run-y6136d5k-evalfront-x65fTA" already exists with the same content. No new version will be created.
+wandb: WARNING Artifact "run-y6136d5k-evalfront-x65fTA" already exists with the same content. No new version will be created.
+wandb: WARNING Artifact "run-y6136d5k-evalfront-x65fTA" already exists with the same content. No new version will be created.
+wandb: WARNING Artifact "run-y6136d5k-evalfront-x65fTA" already exists with the same content. No new version will be created.
+wandb: WARNING Artifact "run-y6136d5k-evalfront-x65fTA" already exists with the same content. No new version will be created.
+wandb: WARNING Artifact "run-y6136d5k-evalfront-x65fTA" already exists with the same content. No new version will be created.
+wandb: WARNING Artifact "run-y6136d5k-evalfront-x65fTA" already exists with the same content. No new version will be created.
+wandb: WARNING Artifact "run-y6136d5k-evalfront-x65fTA" already exists with the same content. No new version will be created.
+wandb: WARNING Artifact "run-y6136d5k-evalfront-x65fTA" already exists with the same content. No new version will be created.
+wandb: WARNING Artifact "run-y6136d5k-evalfront-x65fTA" already exists with the same content. No new version will be created.
+wandb: WARNING Artifact "run-y6136d5k-evalfront-x65fTA" already exists with the same content. No new version will be created.
+wandb: WARNING Artifact "run-y6136d5k-evalfront-x65fTA" already exists with the same content. No new version will be created.
+wandb: WARNING Artifact "run-y6136d5k-evalfront-x65fTA" already exists with the same content. No new version will be created.
+wandb: WARNING Artifact "run-y6136d5k-evalfront-x65fTA" already exists with the same content. No new version will be created.
+wandb: WARNING Artifact "run-y6136d5k-evalfront-x65fTA" already exists with the same content. No new version will be created.
+wandb: WARNING Artifact "run-y6136d5k-evalfront-x65fTA" already exists with the same content. No new version will be created.
+wandb: WARNING Artifact "run-y6136d5k-evalfront-x65fTA" already exists with the same content. No new version will be created.
+wandb: WARNING Artifact "run-y6136d5k-evalfront-x65fTA" already exists with the same content. No new version will be created.
+wandb: WARNING Artifact "run-y6136d5k-evalfront-x65fTA" already exists with the same content. No new version will be created.
+wandb: WARNING Artifact "run-y6136d5k-evalfront-x65fTA" already exists with the same content. No new version will be created.
+wandb: WARNING Artifact "run-y6136d5k-evalfront-x65fTA" already exists with the same content. No new version will be created.
+wandb: WARNING Artifact "run-y6136d5k-evalfront-x65fTA" already exists with the same content. No new version will be created.
+wandb: WARNING Artifact "run-y6136d5k-evalfront-x65fTA" already exists with the same content. No new version will be created.
+wandb: WARNING Artifact "run-y6136d5k-evalfront-x65fTA" already exists with the same content. No new version will be created.
+wandb: WARNING Artifact "run-y6136d5k-evalfront-x65fTA" already exists with the same content. No new version will be created.
+wandb: WARNING Artifact "run-y6136d5k-evalfront-x65fTA" already exists with the same content. No new version will be created.
+wandb: WARNING Artifact "run-y6136d5k-evalfront-x65fTA" already exists with the same content. No new version will be created.
+wandb: WARNING Artifact "run-y6136d5k-evalfront-x65fTA" already exists with the same content. No new version will be created.
+wandb: WARNING Artifact "run-y6136d5k-evalfront-x65fTA" already exists with the same content. No new version will be created.
+wandb: WARNING Artifact "run-y6136d5k-evalfront-x65fTA" already exists with the same content. No new version will be created.
+wandb: WARNING Artifact "run-y6136d5k-evalfront-x65fTA" already exists with the same content. No new version will be created.
+wandb: WARNING Artifact "run-y6136d5k-evalfront-x65fTA" already exists with the same content. No new version will be created.
+wandb: WARNING Artifact "run-y6136d5k-evalfront-x65fTA" already exists with the same content. No new version will be created.
+wandb: WARNING Artifact "run-y6136d5k-evalfront-x65fTA" already exists with the same content. No new version will be created.
+wandb: WARNING Artifact "run-y6136d5k-evalfront-x65fTA" already exists with the same content. No new version will be created.
+
+step 19598 	 return [0.00453248 0.00596816 0.0128214  0.01001473 0.00505802], ([0.00049342 0.0011219  0.00069806 0.00153441 0.00147429]) 	 loss 9.081E-02 	 horizons 19.0
+step 19788 	 return [0.00468638 0.00566952 0.0127873  0.01048464 0.00448437], ([4.2305546e-05 6.0869753e-04 6.2729151e-04 1.1900530e-04 2.5638397e-04]) 	 loss 5.280E-02 	 horizons 19.0
+step 19978 	 return [0.00463798 0.00568881 0.01301653 0.01051517 0.00455927], ([7.0148308e-05 2.7612157e-04 2.1738579e-04 1.9400963e-05 6.5527915e-06]) 	 loss 9.262E-02 	 horizons 19.0
+step 20168 	 return [0.00467301 0.00546672 0.01294611 0.01051804 0.00456799], ([5.7275734e-05 2.2544416e-04 1.7749476e-04 1.5840818e-05 5.3503318e-06]) 	 loss 8.111E-02 	 horizons 19.0
+step 20358 	 return [0.00469131 0.00569151 0.0130881  0.01052693 0.00456385], ([4.2878499e-05 2.7421722e-04 1.6129075e-04 1.1502751e-05 7.6313754e-06]) 	 loss 7.262E-02 	 horizons 19.0
+step 20548 	 return [0.00468327 0.00557911 0.01301605 0.01052267 0.00456613], ([4.8076701e-05 2.7501251e-04 1.8761565e-04 1.3875098e-05 7.1877730e-06]) 	 loss 8.387E-02 	 horizons 19.0
+step 20738 	 return [0.00464221 0.00568695 0.01304824 0.01051799 0.0045583 ], ([6.05826608e-05 3.76957963e-04 1.61706019e-04 1.32031255e-05
+ 8.14552914e-06]) 	 loss 8.123E-02 	 horizons 19.0
+step 20928 	 return [0.00466503 0.00585808 0.01314092 0.01052479 0.00455731], ([5.9079906e-05 1.6749658e-04 1.1749811e-04 1.3234859e-05 6.8490021e-06]) 	 loss 8.259E-02 	 horizons 19.0
+step 21118 	 return [0.00466575 0.00569015 0.01305126 0.01052124 0.00456177], ([5.7310466e-05 2.7447368e-04 1.8098176e-04 1.4487819e-05 8.5729826e-06]) 	 loss 1.001E-01 	 horizons 19.0
+step 21308 	 return [0.00467244 0.00569021 0.0130449  0.01052235 0.00456303], ([5.8282541e-05 2.7588100e-04 2.1724198e-04 1.7278340e-05 5.8945702e-06]) 	 loss 9.167E-02 	 horizons 19.0
+step 21498 	 return [0.00464772 0.00570175 0.01315198 0.01049982 0.00450512], ([1.2117847e-04 4.8322280e-04 1.2937108e-04 8.8236724e-05 1.6103577e-04]) 	 loss 8.382E-02 	 horizons 19.0
+step 21688 	 return [0.0046796  0.00591491 0.01319748 0.01052939 0.00455679], ([6.2588333e-05 3.2654027e-06 9.0242276e-05 1.3949480e-05 5.1013649e-06]) 	 loss 7.960E-02 	 horizons 19.0
+step 21878 	 return [0.00466726 0.00585808 0.0131388  0.01052515 0.00455773], ([6.4079257e-05 1.6971788e-04 1.6992399e-04 1.6515343e-05 5.3536633e-06]) 	 loss 6.043E-02 	 horizons 19.0
+step 22068 	 return [0.0046796  0.00591491 0.01319748 0.01052939 0.00455679], ([6.258833e-05 3.265403e-06 9.024228e-05 1.394948e-05 5.101365e-06]) 	 loss 4.373E-02 	 horizons 19.0
+step 22258 	 return [0.00463466 0.00580335 0.01312518 0.01051623 0.00455187], ([6.5793174e-05 3.2936884e-04 1.0780247e-04 2.1017266e-05 7.9505871e-06]) 	 loss 3.932E-02 	 horizons 19.0
+step 22448 	 return [0.00468183 0.00591494 0.01319536 0.01052976 0.00455721], ([6.0170030e-05 3.2310647e-06 9.3018636e-05 1.3534294e-05 4.7288027e-06]) 	 loss 4.291E-02 	 horizons 19.0
+step 22638 	 return [0.00471793 0.00591691 0.01325275 0.01053794 0.00455992], ([3.8327373e-05 1.9996428e-06 5.5261891e-05 8.5422771e-06 3.1239349e-06]) 	 loss 4.206E-02 	 horizons 19.0
+step 22828 	 return [0.00470738 0.00591627 0.01323221 0.01053546 0.0045593 ], ([4.6912926e-05 2.6093373e-06 7.8064331e-05 1.0681766e-05 3.4548605e-06]) 	 loss 3.091E-02 	 horizons 19.0
+step 23018 	 return [0.00471793 0.00591691 0.01325275 0.01053794 0.00455992], ([3.8327373e-05 1.9996428e-06 5.5261888e-05 8.5422771e-06 3.1239356e-06]) 	 loss 1.101E-02 	 horizons 19.0
+step 23208 	 return [0.0047307  0.00591758 0.01327117 0.01054078 0.00456096], ([4.6566129e-10 4.6566129e-10 1.8626451e-09 0.0000000e+00 4.6566129e-10]) 	 loss 6.543E-03 	 horizons 19.0
+step 23398 	 return [0.0047307  0.00591758 0.01327117 0.01054078 0.00456096], ([4.6566129e-10 4.6566129e-10 1.8626451e-09 0.0000000e+00 4.6566129e-10]) 	 loss 2.994E-03 	 horizons 19.0
+step 23588 	 return [0.0047307  0.00591758 0.01327117 0.01054078 0.00456096], ([4.6566129e-10 4.6566129e-10 1.8626451e-09 0.0000000e+00 4.6566129e-10]) 	 loss 2.143E-03 	 horizons 19.0
+step 23778 	 return [0.0047307  0.00591758 0.01327117 0.01054078 0.00456096], ([4.6566129e-10 4.6566129e-10 1.8626451e-09 0.0000000e+00 4.6566129e-10]) 	 loss 1.835E-03 	 horizons 19.0
+step 23968 	 return [0.0047307  0.00591758 0.01327117 0.01054078 0.00456096], ([4.6566129e-10 4.6566129e-10 1.8626451e-09 0.0000000e+00 4.6566129e-10]) 	 loss 1.637E-03 	 horizons 19.0
+step 24158 	 return [0.00457055 0.00596575 0.01306519 0.0105094  0.00455222], ([4.8045561e-04 1.4452386e-04 6.1792228e-04 9.4142197e-05 2.6217611e-05]) 	 loss 1.355E-03 	 horizons 19.0
+step 24348 	 return [0.00472016 0.00591694 0.01325063 0.01053831 0.00456034], ([3.1644202e-05 1.9131696e-06 6.1618717e-05 7.4322329e-06 1.8628781e-06]) 	 loss 3.934E-03 	 horizons 19.0
+step 24538 	 return [0.0047307  0.00591758 0.01327117 0.01054078 0.00456096], ([4.6566129e-10 4.6566129e-10 1.8626451e-09 0.0000000e+00 4.6566129e-10]) 	 loss 5.438E-03 	 horizons 19.0
+step 24728 	 return [0.0047307  0.00591758 0.01327117 0.01054078 0.00456096], ([4.6566129e-10 4.6566129e-10 1.8626451e-09 0.0000000e+00 4.6566129e-10]) 	 loss 9.784E-04 	 horizons 19.0
+step 24918 	 return [0.0047307  0.00591758 0.01327117 0.01054078 0.00456096], ([4.6566129e-10 4.6566129e-10 1.8626451e-09 0.0000000e+00 4.6566129e-10]) 	 loss 8.825E-04 	 horizons 19.0
+step 25108 	 return [0.0047307  0.00591758 0.01327117 0.01054078 0.00456096], ([4.6566129e-10 4.6566129e-10 1.8626451e-09 0.0000000e+00 4.6566129e-10]) 	 loss 7.583E-04 	 horizons 19.0
+step 25298 	 return [0.0047307  0.00591758 0.01327117 0.01054078 0.00456096], ([4.6566129e-10 4.6566129e-10 1.8626451e-09 0.0000000e+00 4.6566129e-10]) 	 loss 6.583E-04 	 horizons 19.0
+step 25488 	 return [0.0047307  0.00591758 0.01327117 0.01054078 0.00456096], ([4.6566129e-10 4.6566129e-10 1.8626451e-09 0.0000000e+00 4.6566129e-10]) 	 loss 6.981E-04 	 horizons 19.0
+step 25678 	 return [0.0047307  0.00591758 0.01327117 0.01054078 0.00456096], ([4.6566129e-10 4.6566129e-10 1.8626451e-09 0.0000000e+00 4.6566129e-10]) 	 loss 6.443E-04 	 horizons 19.0
+step 25868 	 return [0.0047307  0.00591758 0.01327117 0.01054078 0.00456096], ([4.6566129e-10 4.6566129e-10 1.8626451e-09 0.0000000e+00 4.6566129e-10]) 	 loss 6.153E-04 	 horizons 19.0
+step 26058 	 return [0.0047307  0.00591758 0.01327117 0.01054078 0.00456096], ([4.6566129e-10 4.6566129e-10 1.8626451e-09 0.0000000e+00 4.6566129e-10]) 	 loss 5.713E-04 	 horizons 19.0
+step 26248 	 return [0.0047307  0.00591758 0.01327117 0.01054078 0.00456096], ([4.6566129e-10 4.6566129e-10 1.8626451e-09 0.0000000e+00 4.6566129e-10]) 	 loss 5.093E-04 	 horizons 19.0
+step 26438 	 return [0.0047307  0.00591758 0.01327117 0.01054078 0.00456096], ([4.6566129e-10 4.6566129e-10 1.8626451e-09 0.0000000e+00 4.6566129e-10]) 	 loss 5.249E-04 	 horizons 19.0
+step 26628 	 return [0.0047307  0.00591758 0.01327117 0.01054078 0.00456096], ([4.6566129e-10 4.6566129e-10 1.8626451e-09 0.0000000e+00 4.6566129e-10]) 	 loss 4.990E-04 	 horizons 19.0
+step 26818 	 return [0.0047307  0.00591758 0.01327117 0.01054078 0.00456096], ([4.6566129e-10 4.6566129e-10 1.8626451e-09 0.0000000e+00 4.6566129e-10]) 	 loss 4.813E-04 	 horizons 19.0
+step 27008 	 return [0.00471793 0.00591691 0.01325275 0.01053794 0.00455992], ([3.8327373e-05 1.9996428e-06 5.5261891e-05 8.5422771e-06 3.1239354e-06]) 	 loss 4.681E-04 	 horizons 19.0
+step 27198 	 return [0.0047307  0.00591758 0.01327117 0.01054078 0.00456096], ([4.6566129e-10 4.6566129e-10 1.8626451e-09 0.0000000e+00 4.6566129e-10]) 	 loss 6.087E-03 	 horizons 19.0
+step 27388 	 return [0.0047307  0.00591758 0.01327117 0.01054078 0.00456096], ([4.6566129e-10 4.6566129e-10 1.8626451e-09 0.0000000e+00 4.6566129e-10]) 	 loss 4.128E-04 	 horizons 19.0
+step 27578 	 return [0.0047307  0.00591758 0.01327117 0.01054078 0.00456096], ([4.6566129e-10 4.6566129e-10 1.8626451e-09 0.0000000e+00 4.6566129e-10]) 	 loss 3.924E-04 	 horizons 19.0
+step 27768 	 return [0.0047307  0.00591758 0.01327117 0.01054078 0.00456096], ([4.6566129e-10 4.6566129e-10 1.8626451e-09 0.0000000e+00 4.6566129e-10]) 	 loss 3.755E-04 	 horizons 19.0
+step 27958 	 return [0.0047307  0.00591758 0.01327117 0.01054078 0.00456096], ([4.6566129e-10 4.6566129e-10 1.8626451e-09 0.0000000e+00 4.6566129e-10]) 	 loss 3.750E-04 	 horizons 19.0wandb: WARNING Artifact "run-y6136d5k-evalfront-x65fTA" already exists with the same content. No new version will be created.
+wandb: WARNING Artifact "run-y6136d5k-evalfront-x65fTA" already exists with the same content. No new version will be created.
+wandb: WARNING Artifact "run-y6136d5k-evalfront-x65fTA" already exists with the same content. No new version will be created.
+wandb: WARNING Artifact "run-y6136d5k-evalfront-x65fTA" already exists with the same content. No new version will be created.
+wandb: WARNING Artifact "run-y6136d5k-evalfront-x65fTA" already exists with the same content. No new version will be created.
+wandb: WARNING Artifact "run-y6136d5k-evalfront-x65fTA" already exists with the same content. No new version will be created.
+wandb: WARNING Artifact "run-y6136d5k-evalfront-x65fTA" already exists with the same content. No new version will be created.
+wandb: WARNING Artifact "run-y6136d5k-evalfront-x65fTA" already exists with the same content. No new version will be created.
+wandb: WARNING Artifact "run-y6136d5k-evalfront-x65fTA" already exists with the same content. No new version will be created.
+wandb: WARNING Artifact "run-y6136d5k-evalfront-x65fTA" already exists with the same content. No new version will be created.
+
+step 28148 	 return [0.0047307  0.00591758 0.01327117 0.01054078 0.00456096], ([4.6566129e-10 4.6566129e-10 1.8626451e-09 0.0000000e+00 4.6566129e-10]) 	 loss 3.726E-04 	 horizons 19.0
+step 28338 	 return [0.00471591 0.00585243 0.01325054 0.01053825 0.00455967], ([4.4368906e-05 1.9545313e-04 6.1882478e-05 7.5867397e-06 3.8690864e-06]) 	 loss 4.035E-04 	 horizons 19.0
+step 28528 	 return [0.0047307  0.00591758 0.01327117 0.01054078 0.00456096], ([4.6566129e-10 4.6566129e-10 1.8626451e-09 0.0000000e+00 4.6566129e-10]) 	 loss 3.744E-04 	 horizons 19.0
+step 28718 	 return [0.0047307  0.00591758 0.01327117 0.01054078 0.00456096], ([4.6566129e-10 4.6566129e-10 1.8626451e-09 0.0000000e+00 4.6566129e-10]) 	 loss 3.567E-04 	 horizons 19.0
+step 28908 	 return [0.0047307  0.00591758 0.01327117 0.01054078 0.00456096], ([4.6566129e-10 4.6566129e-10 1.8626451e-09 0.0000000e+00 4.6566129e-10]) 	 loss 3.300E-04 	 horizons 19.0
+step 29098 	 return [0.0047307  0.00591758 0.01327117 0.01054078 0.00456096], ([4.6566129e-10 4.6566129e-10 1.8626451e-09 0.0000000e+00 4.6566129e-10]) 	 loss 2.947E-04 	 horizons 19.0
+step 29288 	 return [0.0047307  0.00591758 0.01327117 0.01054078 0.00456096], ([4.6566129e-10 4.6566129e-10 1.8626451e-09 0.0000000e+00 4.6566129e-10]) 	 loss 3.037E-04 	 horizons 19.0
+step 29478 	 return [0.00471591 0.00585243 0.01325054 0.01053825 0.00455967], ([4.4368910e-05 1.9545312e-04 6.1882478e-05 7.5867388e-06 3.8690864e-06]) 	 loss 2.970E-04 	 horizons 19.0
+step 29668 	 return [0.0047307  0.00591758 0.01327117 0.01054078 0.00456096], ([4.6566129e-10 4.6566129e-10 1.8626451e-09 0.0000000e+00 4.6566129e-10]) 	 loss 2.807E-04 	 horizons 19.0
+step 29858 	 return [0.0047307  0.00591758 0.01327117 0.01054078 0.00456096], ([4.6566129e-10 4.6566129e-10 1.8626451e-09 0.0000000e+00 4.6566129e-10]) 	 loss 2.718E-04 	 horizons 19.0
+step 30048 	 return [0.0047307  0.00591758 0.01327117 0.01054078 0.00456096], ([4.6566129e-10 4.6566129e-10 1.8626451e-09 0.0000000e+00 4.6566129e-10]) 	 loss 2.822E-04 	 horizons 19.0
+[1;34mwandb[0m: 
+[1;34mwandb[0m: 🚀 View run [33mmotndp_xian-v0__GCN-xian-sized__456__1781525607[0m at: [34mhttps://wandb.ai/johnario-tu-delft/cl_ablation/runs/y6136d5k[0m
+[1;34mwandb[0m: Find logs at: [1;35mwandb/run-20260615_141328-y6136d5k/logs[0m

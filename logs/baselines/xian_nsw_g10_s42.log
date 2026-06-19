@@ -1,0 +1,15 @@
+/data/Projects/Assignment for DSAIT/ResearchIDM/mo-transport-network-design/.venv/lib/python3.13/site-packages/pygame/pkgdata.py:25: UserWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html. The pkg_resources package is slated for removal as early as 2025-11-30. Refrain from using this package or pin to Setuptools<81.
+  from pkg_resources import resource_stream, resource_exists
+wandb: [wandb.login()] Loaded credentials for https://api.wandb.ai from /home/johnario/.netrc.
+wandb: Currently logged in as: johnario (johnario-tu-delft) to https://api.wandb.ai. Use `wandb login --relogin` to force relogin
+wandb: setting up run i1ayvc4j
+wandb: Tracking run with wandb version 0.27.2
+wandb: Run data is saved locally in /data/Projects/Assignment for DSAIT/ResearchIDM/mo-transport-network-design/wandb/run-20260619_131156-i1ayvc4j
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run motndp_xian-v0__NSW-xian-g10__42__1781867515
+wandb: ⭐️ View project at https://wandb.ai/johnario-tu-delft/cl_ablation
+wandb: 🚀 View run at https://wandb.ai/johnario-tu-delft/cl_ablation/runs/i1ayvc4j
+/data/Projects/Assignment for DSAIT/ResearchIDM/mo-transport-network-design/morl-baselines/morl_baselines/multi_policy/gcn/gcn.py:151: UserWarning: Creating a tensor from a list of numpy.ndarrays is extremely slow. Please consider converting the list to a single numpy.ndarray with numpy.array() before converting to a tensor. (Triggered internally at /pytorch/torch/csrc/utils/tensor_new.cpp:253.)
+  th.tensor(obs).to(self.device),
+/data/Projects/Assignment for DSAIT/ResearchIDM/mo-transport-network-design/morl-baselines/morl_baselines/common/performance_indicators.py:144: RuntimeWarning: invalid value encountered in divide
+  gi = (n + 1 - 2 * np.sum(cum_x, axis=1) / cum_x[:, -1]) / n
