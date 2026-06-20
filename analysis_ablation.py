@@ -1,6 +1,11 @@
 """
-Ablation analysis: GCN lambda-scheduler experiments.
-Generates training curves, bar charts, and LaTeX three-line tables.
+Ablation analysis: GCN lambda-scheduler experiments + PCN / NCN(NSW) baselines.
+
+Pulls runs from two wandb projects (see PROJECT / BASELINE_PROJECT) and generates
+training curves, bar charts, and LaTeX three-line tables. This is the single entry
+point for all ablation figures (it supersedes the old analysis_from_logs.py /
+dump_runs.py). Baselines are only logged for Xi'an and for a subset of metrics, so
+their missing cells appear as "--" / are dropped from the relevant bars.
 
 Usage:
     python analysis_ablation.py              # all envs, all groups
@@ -37,7 +42,8 @@ import wandb
 
 # ── Constants ─────────────────────────────────────────────────────────────────
 
-PROJECT    = "jingyuan-sun03-tu-delft/cl_ablation"
+PROJECT          = "jingyuan-sun03-tu-delft/cl_ablation"   # GCN ablation runs
+BASELINE_PROJECT = "johnario-tu-delft/cl_ablation"          # PCN / NSW(=NCN) baselines
 HIDDEN_DIM = 128
 GROUPS     = [3, 5, 7, 10]
 CONFIGS    = ["l0", "temporal", "spatial", "spatiotemporal", "pcn", "ncn"]
@@ -71,7 +77,11 @@ METRICS = {
     "eval/served_floor_max":       ("Served Floor",   True),
     "eval/gini_min":               ("Gini",           False),  # min = best front point (lower is better)
     "eval/efficiency_max":         ("Efficiency",     True),
-    "eval/spatial_sw_high_median": ("Spatial SW High Median", True),  # no _max key logged; left as median
+    # Our proposed metric. NOTE: only a *_median key is logged for the existing runs
+    # (no *_max), so this single column is a front-MEDIAN, not best-of-front. Label
+    # says "(median)" to keep that explicit. To make it best-of-front, log
+    # eval/spatial_sw_high_max in morl_baselines/common/evaluation.py and re-run.
+    "eval/spatial_sw_high_median": ("Spatial SW (median)", True),
 }
 
 # Metrics shown on training curves
@@ -80,9 +90,16 @@ CURVE_METRICS = {
     "eval/eum":                    "EUM",
     "eval/sen_welfare_max":        "Sen Welfare",
     "eval/demand_coverage_max":    "Coverage Rate",
-    "eval/spatial_sw_high_median": "Spatial SW High Median",
+    "eval/spatial_sw_high_median": "Spatial SW (median)",
 }
 CURVE_SMOOTH = 5   # rolling window (on ~30 eval points; 5 ≈ light smoothing)
+
+# The baselines log spatial_sw on a different demand scale than the GCN runs
+# (~200× larger, and their low-region/ratio are NaN), so absolute values are not
+# comparable. We null these (metric, method) cells so they show as "--" / are
+# omitted everywhere, while the baselines stay in the genuinely comparable metrics.
+BASELINE_CONFIGS    = ("pcn", "ncn")
+NO_BASELINE_METRICS = ("eval/spatial_sw_high_median",)
 
 SAVEDIR = Path("figures/ablation")
 SAVEDIR.mkdir(parents=True, exist_ok=True)
@@ -92,54 +109,103 @@ SAVEDIR.mkdir(parents=True, exist_ok=True)
 def classify_run(cfg: dict):
     """Map a run's wandb config to (env, groups, method); method in CONFIGS or None.
 
-    Uses config fields rather than the run name, so it also handles the PCN and NCN
-    baselines (which are not named GCN-<env>-g<G>-<config>). PCN is detected by name,
-    NCN by criterion=='nash', and the four GCN schemes by spatial_alpha / schedule.
+    These runs encode their identity in the ``algo`` string (e.g. ``GCN-xian-g3-l0``),
+    the ``env_id`` (e.g. ``motndp_xian-v0``) and ``reward_dim`` (== nr. income groups),
+    not in dedicated ``env`` / ``nr_groups`` / ``criterion`` fields. We parse those.
+    PCN / NCN baselines (if present) are detected by name / 'nash' for forward-compat.
     """
-    env = cfg.get("env")
-    groups = cfg.get("nr_groups")
-    if env is None or groups is None:
+    algo   = str(cfg.get("algo") or cfg.get("experiment_name") or "")
+    env_id = str(cfg.get("env_id") or "")
+    low    = algo.lower()
+
+    # env
+    if "xian" in low or "xian" in env_id:
+        env = "xian"
+    elif "amsterdam" in low or "amsterdam" in env_id:
+        env = "amsterdam"
+    else:
+        env = cfg.get("env")
+    if env is None:
         return None, None, None
-    name = str(cfg.get("experiment_name") or cfg.get("algo") or "")
-    if name.upper().startswith("PCN"):
-        return env, int(groups), "pcn"
-    if cfg.get("criterion") == "nash":
-        return env, int(groups), "ncn"
-    if cfg.get("criterion", "lorenz") == "lorenz":
-        spatial = float(cfg.get("spatial_alpha") or 0) > 0
-        sched = (cfg.get("lambda_schedule") or cfg.get("scheduling_method") or "constant") != "constant"
-        return env, int(groups), {
-            (False, False): "l0", (False, True): "temporal",
-            (True, False): "spatial", (True, True): "spatiotemporal",
-        }[(spatial, sched)]
-    return None, None, None
+
+    # groups: prefer an explicit -g<N> token in algo, else reward_dim / nr_groups
+    m = re.search(r"-g(\d+)", low)
+    if m:
+        groups = int(m.group(1))
+    else:
+        g = cfg.get("reward_dim") if cfg.get("reward_dim") is not None else cfg.get("nr_groups")
+        if g is None:
+            return None, None, None
+        groups = int(g)
+
+    # method (check spatiotemporal before temporal/spatial — it contains both)
+    if low.startswith("pcn"):
+        method = "pcn"
+    elif low.startswith("nsw") or "nash" in low or cfg.get("criterion") == "nash":
+        method = "ncn"  # NSW = Nash Social Welfare baseline
+    elif low.endswith("spatiotemporal"):
+        method = "spatiotemporal"
+    elif low.endswith("temporal"):
+        method = "temporal"
+    elif low.endswith("spatial"):
+        method = "spatial"
+    elif low.endswith("l0"):
+        method = "l0"
+    else:
+        return None, None, None
+
+    return env, groups, method
+
+
+def _null_incomparable(df: pd.DataFrame) -> pd.DataFrame:
+    """Null out (metric, baseline-method) cells whose scale is not comparable."""
+    if df.empty or "config" not in df.columns:
+        return df
+    mask = df["config"].isin(BASELINE_CONFIGS)
+    for m in NO_BASELINE_METRICS:
+        if m in df.columns:
+            df.loc[mask, m] = np.nan
+    return df
 
 
 def fetch_summary(envs_filter=None) -> pd.DataFrame:
     api = wandb.Api()
-    # NOTE: only runs with this hidden_dim and state are pulled. If the PCN/NCN
-    # baselines used a different hidden_dim or live in another project, adjust
-    # PROJECT / drop the hidden_dim filter so they are included.
-    runs = api.runs(PROJECT, filters={"config.hidden_dim": HIDDEN_DIM, "state": "finished"})
+    # Two sources: the GCN ablation project (all runs), plus ONLY the PCN / NSW(=NCN)
+    # baselines from the baselines project. The latter also holds many other algos
+    # (e.g. GCN-*-i2_l0, GCN-*-nash) that would be misread as ablation schemes, so we
+    # restrict it to the PCN-/NSW- prefixes by name.
+    sources = [
+        (PROJECT,          lambda al: True),
+        (BASELINE_PROJECT, lambda al: al.upper().startswith(("PCN-", "NSW-"))),
+    ]
     rows = []
-    for r in runs:
-        env, groups, config = classify_run(r.config)
-        if env is None:
-            continue
-        if envs_filter and env not in envs_filter:
-            continue
-        row = dict(env=env, groups=groups, config=config,
-                   seed=r.config.get("seed"), run_id=r.id)
-        for key in METRICS:
-            row[key] = r.summary.get(key, np.nan)
-        rows.append(row)
+    for proj, accept in sources:
+        runs = api.runs(proj, filters={"config.hidden_dim": HIDDEN_DIM, "state": "finished"})
+        for r in runs:
+            if not accept(str(r.config.get("algo") or "")):
+                continue
+            env, groups, config = classify_run(r.config)
+            if env is None:
+                continue
+            if envs_filter and env not in envs_filter:
+                continue
+            row = dict(env=env, groups=groups, config=config,
+                       seed=r.config.get("seed"), run_id=r.id, project=proj)
+            for key in METRICS:
+                row[key] = r.summary.get(key, np.nan)
+            rows.append(row)
 
     df = pd.DataFrame(rows)
+    if df.empty:
+        raise RuntimeError(
+            f"No runs matched in projects '{PROJECT}' / '{BASELINE_PROJECT}' "
+            f"(hidden_dim={HIDDEN_DIM}, state=finished, envs={envs_filter}). "
+            "Check classify_run / the wandb filters.")
     # keep one run per (env, groups, config, seed) — latest run_id wins
     df = (df.sort_values("run_id")
             .drop_duplicates(subset=["env", "groups", "config", "seed"], keep="last")
             .reset_index(drop=True))
-    return df
+    return _null_incomparable(df)
 
 
 def fetch_histories(df_summary: pd.DataFrame) -> pd.DataFrame:
@@ -151,7 +217,7 @@ def fetch_histories(df_summary: pd.DataFrame) -> pd.DataFrame:
         if (i + 1) % 20 == 0:
             print(f"  history {i+1}/{total}")
         try:
-            r = api.run(f"{PROJECT}/{row['run_id']}")
+            r = api.run(f"{row['project']}/{row['run_id']}")
             h = r.history(keys=keys)
             h = h.dropna(subset=["global_step"])
             h["env"]    = row["env"]
@@ -161,7 +227,8 @@ def fetch_histories(df_summary: pd.DataFrame) -> pd.DataFrame:
             frames.append(h)
         except Exception as e:
             print(f"  skip {row['run_id']}: {e}")
-    return pd.concat(frames, ignore_index=True) if frames else pd.DataFrame()
+    return _null_incomparable(
+        pd.concat(frames, ignore_index=True) if frames else pd.DataFrame())
 
 
 # ── Helper ────────────────────────────────────────────────────────────────────
@@ -189,65 +256,95 @@ def _has_data(df, env, metric):
 
 # ── Plots ─────────────────────────────────────────────────────────────────────
 
-def plot_training_curves(df_hist: pd.DataFrame, env: str):
-    """4-panel figure (one panel per group), sublines = configs."""
-    df = df_hist[df_hist["env"] == env]
-    if df.empty:
-        print(f"  No history data for {env}, skipping curves.")
+def _curve_axis(ax, sub, metric, configs_seen: list) -> bool:
+    """Plot every config's mean±std curve for one (env, group) onto ax.
+
+    Steps are binned to 1000-step intervals so seeds with slightly different eval
+    schedules align; a light rolling window smooths the mean and the band.
+    Appends any config actually drawn to ``configs_seen`` (for the shared legend).
+    Returns True if at least one config was plotted.
+    """
+    any_plotted = False
+    for cfg in CONFIGS:
+        c = sub[sub["config"] == cfg].dropna(subset=[metric]).copy()
+        if c.empty:
+            continue
+        c["step_bin"] = (c["global_step"] // 1000) * 1000
+        grp  = c.groupby("step_bin")[metric]
+        mean = grp.mean()
+        std  = grp.std().fillna(0)
+        w = CURVE_SMOOTH
+        mean_s = mean.rolling(w, center=True, min_periods=1).mean()
+        std_s  = std.rolling(w, center=True, min_periods=1).mean()
+        ax.plot(mean_s.index, mean_s.values, color=PALETTE[cfg], linewidth=1.8)
+        ax.fill_between(mean_s.index,
+                        (mean_s - std_s).values, (mean_s + std_s).values,
+                        alpha=0.15, color=PALETTE[cfg], linewidth=0)
+        if cfg not in configs_seen:
+            configs_seen.append(cfg)
+        any_plotted = True
+    return any_plotted
+
+
+def plot_training_curves(df_hist: pd.DataFrame, envs):
+    """One combined figure per metric: stacked env sections (bold title), each a
+    row of per-group panels, with a single shared legend at the bottom.
+
+    Mirrors the multi-objective training-curve layout (env block on top of env
+    block, one panel per group/objective count, common method legend).
+    """
+    if df_hist.empty:
+        print("  No history data, skipping curves.")
         return
+    envs = [e for e in ENVS if e in envs]   # canonical order
 
     for metric, label in CURVE_METRICS.items():
-        valid = df[metric].dropna()
-        if valid.empty or valid.abs().sum() == 0:
+        envs_present = []
+        for e in envs:
+            vals = df_hist[df_hist["env"] == e][metric].dropna()
+            if len(vals) > 0 and vals.abs().sum() > 0:
+                envs_present.append(e)
+        if not envs_present:
             continue
 
-        fig, axes = plt.subplots(1, len(GROUPS), figsize=(4.5 * len(GROUPS), 3.5),
-                                 sharey=False)
-        fig.suptitle(f"{env.capitalize()} — {label}", fontsize=13, y=1.01)
+        with plt.rc_context({"font.family": "serif",
+                             "mathtext.fontset": "dejavuserif"}):
+            fig = plt.figure(figsize=(4.2 * len(GROUPS), 3.1 * len(envs_present)))
+            subfigs = fig.subfigures(len(envs_present), 1, hspace=0.10)
+            if len(envs_present) == 1:
+                subfigs = [subfigs]
 
-        for ax, g in zip(axes, GROUPS):
-            sub = df[(df["env"] == env) & (df["groups"] == g)]
-            any_plotted = False
-            for cfg in CONFIGS:
-                c = sub[sub["config"] == cfg].dropna(subset=[metric]).copy()
-                if c.empty:
-                    continue
-                # Bin steps to 1000-step intervals so seeds with slightly
-                # different eval schedules are grouped together correctly.
-                c["step_bin"] = (c["global_step"] // 1000) * 1000
-                grp  = c.groupby("step_bin")[metric]
-                mean = grp.mean()
-                std  = grp.std().fillna(0)
-                w = CURVE_SMOOTH
-                mean_s = mean.rolling(w, center=True, min_periods=1).mean()
-                std_s  = std.rolling(w, center=True, min_periods=1).mean()
-                ax.plot(mean_s.index, mean_s.values,
-                        label=CONFIG_LABELS[cfg], color=PALETTE[cfg], linewidth=1.6)
-                ax.fill_between(mean_s.index,
-                                (mean_s - std_s).values, (mean_s + std_s).values,
-                                alpha=0.15, color=PALETTE[cfg])
-                any_plotted = True
+            configs_seen = []
+            for subfig, env in zip(subfigs, envs_present):
+                title = "Xi'an" if env == "xian" else env.capitalize()
+                subfig.suptitle(title, fontweight="bold", fontsize=15)
+                axes = subfig.subplots(1, len(GROUPS), sharey=False)
+                if len(GROUPS) == 1:
+                    axes = [axes]
+                for ax, g in zip(axes, GROUPS):
+                    sub = df_hist[(df_hist["env"] == env) & (df_hist["groups"] == g)]
+                    plotted = _curve_axis(ax, sub, metric, configs_seen)
+                    ax.set_title(f"{g} Objectives", fontsize=12)
+                    ax.set_xlabel("Step")
+                    ax.xaxis.set_major_formatter(
+                        mticker.FuncFormatter(lambda x, _: f"{int(x/1000)}k"))
+                    ax.ticklabel_format(axis="y", style="sci", scilimits=(0, 0))
+                    if ax is axes[0]:
+                        ax.set_ylabel(label)
+                    if not plotted:
+                        ax.set_visible(False)
 
-            ax.set_title(f"G = {g}", fontsize=11)
-            ax.set_xlabel("Step")
-            ax.xaxis.set_major_formatter(
-                mticker.FuncFormatter(lambda x, _: f"{int(x/1000)}k"))
-            if ax is axes[0]:
-                ax.set_ylabel(label)
-            if not any_plotted:
-                ax.set_visible(False)
+            ordered = [c for c in CONFIGS if c in configs_seen]
+            handles = [Line2D([0], [0], color=PALETTE[c], linewidth=2.4,
+                              label=CONFIG_LABELS[c]) for c in ordered]
+            fig.legend(handles=handles, loc="lower center", ncol=len(ordered),
+                       frameon=True, bbox_to_anchor=(0.5, -0.04))
 
-        handles = [Line2D([0], [0], color=PALETTE[c], linewidth=1.6,
-                          label=CONFIG_LABELS[c]) for c in CONFIGS]
-        fig.legend(handles=handles, loc="lower center", ncol=4,
-                   bbox_to_anchor=(0.5, -0.08), frameon=False)
-        fig.tight_layout()
-
-        tag = metric.replace("eval/", "").replace("/", "_")
-        for ext in ("pdf", "png"):
-            fig.savefig(SAVEDIR / f"curve_{env}_{tag}.{ext}", bbox_inches="tight")
-        print(f"  Saved curve_{env}_{tag}.pdf")
-        plt.close(fig)
+            tag = metric.replace("eval/", "").replace("/", "_")
+            for ext in ("pdf", "png"):
+                fig.savefig(SAVEDIR / f"curve_{tag}.{ext}", bbox_inches="tight")
+            print(f"  Saved curve_{tag}.pdf")
+            plt.close(fig)
 
 
 def plot_bar_per_metric(df: pd.DataFrame, env: str):
@@ -593,8 +690,7 @@ def main():
         print("\nFetching training histories (takes a few minutes) …")
         df_hist = fetch_histories(df)
         if not df_hist.empty:
-            for env in args.env:
-                plot_training_curves(df_hist, env)
+            plot_training_curves(df_hist, args.env)
     else:
         print("\nTraining curves skipped (--no-curves).")
 
